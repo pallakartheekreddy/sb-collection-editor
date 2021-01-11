@@ -1,0 +1,36 @@
+<div class="add-to-library mb-30">
+  <lib-editor-header
+    [toolbarConfig]="toolbarConfig"
+    (toolbarEmitter)="toolbarEventListener($event)"
+  >
+  </lib-editor-header>
+  <div class="min-h-500 sb-bg-white">
+    <div class="ui">
+      <div class="ui twelve column grid m-0">
+        <!-- Left Sidebar for cards -->
+        <div class="three wide column p-0 h-100vh">
+          <lib-collection-tree-new *ngIf="collectionTreeNodes && collectionTreeNodes.data"
+            [nodes]="collectionTreeNodes"
+            (treeEventEmitter)="treeEventListener($event)"
+          >
+          </lib-collection-tree-new>
+        </div>
+        <!-- Right Player Sections -->
+        <div class="eight wide column bg-white pl-40">
+          <ng-container>
+            <lib-meta-form (prevNodeMeatadata)="updateNodeMetadata($event)"></lib-meta-form>
+          </ng-container>
+          <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
+            <lib-contentplayer-page></lib-contentplayer-page>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <sui-modal *ngIf="showResourceModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+[size]="'fullscreen'" class="sb-modal sb-modal-fullscreen" appBodyScroll
+(dismissed)="showResourceModal = false" #modal>
+  <app-resources (onProceedClick)="onProceedClick($event)"></app-resources>
+</sui-modal> -->
