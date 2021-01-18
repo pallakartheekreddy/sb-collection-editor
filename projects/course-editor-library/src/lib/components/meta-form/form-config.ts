@@ -1,1260 +1,51 @@
-import {tap, switchMap} from 'rxjs/operators';
-import {of, merge, from} from 'rxjs';
-import { map } from 'lodash-es';
-
 export const formConfig = [
   {
-    'code': 'name',
-    'dataType': 'text',
-    'description': 'Name of the content',
-    'editable': true,
-    'inputType': 'text',
-    'label': 'Name',
-    'name': 'Name',
-    'placeholder': 'Name',
-    'renderingHints': {},
-    'required': true,
-    'visible': true,
-    'default': 'Test Name',
-    'validation': [{
-      'type': 'max',
-      'value': '120',
-      'message': 'Input is Exceded'
-    }]
-  },
-  {
-    'code': 'description',
-    'dataType': 'text',
-    'description': 'Brief description',
-    'editable': true,
-    'inputType': 'textarea',
-    'label': 'Description',
-    'name': 'Description',
-    'placeholder': 'Description',
-    'renderingHints': {},
-    'required': false,
-    'visible': true,
-    'validation': [{
-      'type': 'max',
-      'value': '1000',
-      'message': 'Input is Exceded'
-    }]
-  },
-  // {
-  //   'code': 'topic',
-  //   'visible': true,
-  //   'editable': true,
-  //   'dataType': 'list',
-  //   'renderingHints': {},
-  //   'name': 'Topic',
-  //   'description': 'Choose a Topics',
-  //   'index': 11,
-  //   'inputType': 'topicselector',
-  //   'label': 'Topics',
-  //   'placeholder': 'Choose Topics',
-  //   'required': false,
-  //   'section': {
-  //     'index': 3,
-  //     'name': ''
-  //   }
-  // }, {
-  //   'code': 'keywords',
-  //   'visible': true,
-  //   'editable': true,
-  //   'dataType': 'list',
-  //   'name': 'Keywords',
-  //   'renderingHints': {
-  //     'class': 'col-span-2'
-  //   },
-  //   'index': 3,
-  //   'description': 'Keywords for the content',
-  //   'inputType': 'keywordsuggestion',
-  //   'label': 'keywords',
-  //   'placeholder': 'Enter Keywords',
-  //   'required': false,
-  //   'section': {
-  //     'index': 1,
-  //     'name': ''
-  //   }
-  // }
-  // {
-  //   'code': 'board',
-  //   'dataType': 'text',
-  //   'depends': [
-  //       'gradeLevel',
-  //       'medium',
-  //       'subject',
-  //       'topic'
-  //   ],
-  //   'description': 'Board',
-  //   'editable': true,
-  //   'index': 2,
-  //   'inputType': 'select',
-  //   'label': 'Board/Syllabus',
-  //   'name': 'Board/Syllabus',
-  //   'placeholder': 'Select Board/Syllabus',
-  //   'renderingHints': {},
-  //   'required': true,
-  //   'visible': true,
-  //   'type': 'select',
-  //   'templateOptions': {
-  //     'placeHolder': 'Select Board',
-  //     'multiple': false,
-  //     'hidden': false,
-  //   },
-  //   'validations': [{
-  //     'type': 'required'
-  //   }],
-  //   'identifier': 'ekstep_ncert_k-12_board',
-  //   'terms': [
-  //     {
-  //     'associations': [
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_sanskrit',
-  //         'code': 'sanskrit',
-  //         'translations': null,
-  //         'name': 'Sanskrit',
-  //         'description': 'Sanskrit',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_urdu',
-  //         'code': 'urdu',
-  //         'translations': null,
-  //         'name': 'Urdu',
-  //         'description': 'Urdu',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_hindi',
-  //         'code': 'hindi',
-  //         'translations': null,
-  //         'name': 'Hindi',
-  //         'description': 'Hindi',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_english',
-  //         'code': 'english',
-  //         'translations': null,
-  //         'name': 'English',
-  //         'description': 'English',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class1',
-  //         'code': 'class1',
-  //         'translations': null,
-  //         'name': 'Class 1',
-  //         'description': 'Class 1',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class2',
-  //         'code': 'class2',
-  //         'translations': null,
-  //         'name': 'Class 2',
-  //         'description': 'Class 2',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class3',
-  //         'code': 'class3',
-  //         'translations': null,
-  //         'name': 'Class 3',
-  //         'description': 'Class 3',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class4',
-  //         'code': 'class4',
-  //         'translations': null,
-  //         'name': 'Class 4',
-  //         'description': 'Class 4',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class5',
-  //         'code': 'class5',
-  //         'translations': null,
-  //         'name': 'Class 5',
-  //         'description': 'Class 5',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class6',
-  //         'code': 'class6',
-  //         'translations': null,
-  //         'name': 'Class 6',
-  //         'description': 'Class 6',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class7',
-  //         'code': 'class7',
-  //         'translations': null,
-  //         'name': 'Class 7',
-  //         'description': 'Class 7',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class8',
-  //         'code': 'class8',
-  //         'translations': null,
-  //         'name': 'Class 8',
-  //         'description': 'Class 8',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class9',
-  //         'code': 'class9',
-  //         'translations': null,
-  //         'name': 'Class 9',
-  //         'description': 'Class 9',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       }
-  //     ],
-  //     'identifier': 'ekstep_ncert_k-12_board_cbse',
-  //     'code': 'cbse',
-  //     'translations': null,
-  //     'name': 'CBSE',
-  //     'description': 'CBSE',
-  //     'index': 1,
-  //     'category': 'board',
-  //     'status': 'Live'
-  //   },
-  //   {
-  //     'associations': [
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_hindi',
-  //         'code': 'hindi',
-  //         'translations': null,
-  //         'name': 'Hindi',
-  //         'description': 'Hindi',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_medium_english',
-  //         'code': 'english',
-  //         'translations': null,
-  //         'name': 'English',
-  //         'description': 'English',
-  //         'index': 0,
-  //         'category': 'medium',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class6',
-  //         'code': 'class6',
-  //         'translations': null,
-  //         'name': 'Class 6',
-  //         'description': 'Class 6',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class7',
-  //         'code': 'class7',
-  //         'translations': null,
-  //         'name': 'Class 7',
-  //         'description': 'Class 7',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class8',
-  //         'code': 'class8',
-  //         'translations': null,
-  //         'name': 'Class 8',
-  //         'description': 'Class 8',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class9',
-  //         'code': 'class9',
-  //         'translations': null,
-  //         'name': 'Class 9',
-  //         'description': 'Class 9',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class10',
-  //         'code': 'class10',
-  //         'translations': null,
-  //         'name': 'Class 10',
-  //         'description': 'Class 10',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class11',
-  //         'code': 'class11',
-  //         'translations': null,
-  //         'name': 'Class 11',
-  //         'description': 'Class 11',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //       {
-  //         'identifier': 'ekstep_ncert_k-12_gradelevel_class12',
-  //         'code': 'class12',
-  //         'translations': null,
-  //         'name': 'Class 12',
-  //         'description': 'Class 12',
-  //         'index': 0,
-  //         'category': 'gradeLevel',
-  //         'status': 'Live'
-  //       },
-  //     ],
-  //     'identifier': 'ekstep_ncert_k-12_board_ncert',
-  //     'code': 'ncert',
-  //     'translations': null,
-  //     'name': 'NCERT',
-  //     'description': 'NCERT',
-  //     'index': 1,
-  //     'category': 'board',
-  //     'status': 'Live'
-  //   }
-  // ],
-  //   'translations': null,
-  //   'status': 'Live'
-  // },
-  // {
-  //   'code': 'medium',
-  //   'dataType': 'list',
-  //   'description': '',
-  //   'editable': true,
-  //   'index': 3,
-  //   'depends': [
-  //       'gradeLevel',
-  //       'subject',
-  //       'topic'
-  //   ],
-  //   'inputType': 'select',
-  //   'label': 'medium',
-  //   'name': 'medium',
-  //   'placeholder': 'Select Medium',
-  //   'renderingHints': {},
-  //   'required': true,
-  //   'visible': true,
-  //   'identifier': 'ekstep_ncert_k-12_medium',
-  //   'terms': [
-  //     {
-  //       'associations': [
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class1',
-  //           'code': 'class1',
-  //           'translations': null,
-  //           'name': 'Class 1',
-  //           'description': 'Class 1',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class2',
-  //           'name': 'Class 2',
-  //           'status': 'Live',
-  //           'code': 'class2',
-  //           'description': 'Class 2',
-  //           'translations': null,
-  //           'index': 0,
-  //           'category': 'gradeLevel'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class3',
-  //           'code': 'class3',
-  //           'translations': null,
-  //           'name': 'Class 3',
-  //           'description': 'Class 3',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         }
-  //       ],
-  //       'identifier': 'ekstep_ncert_k-12_medium_english',
-  //       'code': 'english',
-  //       'translations': null,
-  //       'name': 'English',
-  //       'description': 'English',
-  //       'index': 1,
-  //       'category': 'medium',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'associations': [
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class4',
-  //           'code': 'class4',
-  //           'translations': null,
-  //           'name': 'Class 4',
-  //           'description': 'Class 4',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class5',
-  //           'code': 'class5',
-  //           'translations': null,
-  //           'name': 'Class 5',
-  //           'description': 'Class 5',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class6',
-  //           'code': 'class6',
-  //           'translations': null,
-  //           'name': 'Class 6',
-  //           'description': 'Class 6',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         }
-  //       ],
-  //       'identifier': 'ekstep_ncert_k-12_medium_hindi',
-  //       'code': 'hindi',
-  //       'translations': null,
-  //       'name': 'Hindi',
-  //       'description': 'Hindi',
-  //       'index': 2,
-  //       'category': 'medium',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'associations': [
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class7',
-  //           'code': 'class7',
-  //           'translations': null,
-  //           'name': 'Class 7',
-  //           'description': 'Class 7',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class8',
-  //           'code': 'class8',
-  //           'translations': null,
-  //           'name': 'Class 8',
-  //           'description': 'Class 8',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class9',
-  //           'code': 'class9',
-  //           'translations': null,
-  //           'name': 'Class 9',
-  //           'description': 'Class 9',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //       ],
-  //       'identifier': 'ekstep_ncert_k-12_medium_sanskrit',
-  //       'code': 'sanskrit',
-  //       'translations': null,
-  //       'name': 'Sanskrit',
-  //       'description': 'Sanskrit',
-  //       'index': 12,
-  //       'category': 'medium',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'associations': [
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class10',
-  //           'code': 'class10',
-  //           'translations': null,
-  //           'name': 'Class 10',
-  //           'description': 'Class 10',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class11',
-  //           'code': 'class11',
-  //           'translations': null,
-  //           'name': 'Class 11',
-  //           'description': 'Class 11',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         },
-  //         {
-  //           'identifier': 'ekstep_ncert_k-12_gradelevel_class12',
-  //           'code': 'class12',
-  //           'translations': null,
-  //           'name': 'Class 12',
-  //           'description': 'Class 12',
-  //           'index': 0,
-  //           'category': 'gradeLevel',
-  //           'status': 'Live'
-  //         }
-  //       ],
-  //       'identifier': 'ekstep_ncert_k-12_medium_urdu',
-  //       'code': 'urdu',
-  //       'translations': null,
-  //       'name': 'Urdu',
-  //       'description': 'Urdu',
-  //       'index': 13,
-  //       'category': 'medium',
-  //       'status': 'Live'
-  //     }
-  //   ],
-  //   'translations': null,
-  //   'association': true,
-  //   'status': 'Live',
-  //   'type': 'select',
-  //   'templateOptions': {
-  //     'placeHolder': 'Select Category',
-  //     'multiple': false,
-  //   },
-  //   'validations': [{
-  //     'type': 'required'
-  //   }]
-  // },
-  // {
-  //   'code': 'gradeLevel',
-  //   'dataType': 'list',
-  //   'description': 'Class',
-  //   'editable': true,
-  //   'index': 4,
-  //   'depends': [
-  //       'subject',
-  //       'topic'
-  //   ],
-  //   'inputType': 'select',
-  //   'label': 'Class',
-  //   'name': 'Class',
-  //   'placeholder': 'Select Class',
-  //   'renderingHints': {},
-  //   'required': true,
-  //   'visible': true,
-  //   'identifier': 'ekstep_ncert_k-12_gradelevel',
-  //   'terms': [
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class1',
-  //       'code': 'class1',
-  //       'translations': null,
-  //       'name': 'Class 1',
-  //       'description': 'Class 1',
-  //       'index': 1,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class2',
-  //       'code': 'class2',
-  //       'translations': null,
-  //       'name': 'Class 2',
-  //       'description': 'Class 2',
-  //       'index': 2,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class3',
-  //       'code': 'class3',
-  //       'translations': null,
-  //       'name': 'Class 3',
-  //       'description': 'Class 3',
-  //       'index': 3,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class4',
-  //       'code': 'class4',
-  //       'translations': null,
-  //       'name': 'Class 4',
-  //       'description': 'Class 4',
-  //       'index': 4,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class5',
-  //       'code': 'class5',
-  //       'translations': null,
-  //       'name': 'Class 5',
-  //       'description': 'Class 5',
-  //       'index': 5,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class6',
-  //       'code': 'class6',
-  //       'translations': null,
-  //       'name': 'Class 6',
-  //       'description': 'Class 6',
-  //       'index': 6,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class7',
-  //       'code': 'class7',
-  //       'translations': null,
-  //       'name': 'Class 7',
-  //       'description': 'Class 7',
-  //       'index': 7,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class8',
-  //       'code': 'class8',
-  //       'translations': null,
-  //       'name': 'Class 8',
-  //       'description': 'Class 8',
-  //       'index': 8,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class9',
-  //       'code': 'class9',
-  //       'translations': null,
-  //       'name': 'Class 9',
-  //       'description': 'Class 9',
-  //       'index': 9,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class10',
-  //       'code': 'class10',
-  //       'translations': null,
-  //       'name': 'Class 10',
-  //       'description': 'Class 10',
-  //       'index': 10,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class11',
-  //       'code': 'class11',
-  //       'translations': null,
-  //       'name': 'Class 11',
-  //       'description': 'Class 11',
-  //       'index': 11,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     },
-  //     {
-  //       'identifier': 'ekstep_ncert_k-12_gradelevel_class12',
-  //       'code': 'class12',
-  //       'translations': null,
-  //       'name': 'Class 12',
-  //       'description': 'Class 12',
-  //       'index': 12,
-  //       'category': 'gradeLevel',
-  //       'status': 'Live'
-  //     }
-  //   ],
-  //   'translations': null,
-  //   'status': 'Live',
-  //   'association': true,
-  //   'validation': [{
-  //     'type': 'max',
-  //     'message': 'Input is Exceeded',
-  //     'value': '1000'
-  //   }]
-  // },
-  // {
-  //   'code': 'primaryCategory',
-  //   'dataType': 'text',
-  //   'description': 'Collection Type',
-  //   'depends': [
-  //     'additionalCategories'
-  //   ],
-  //   'editable': false,
-  //   'index': 0,
-  //   'inputType': 'select',
-  //   'label': 'Collection Type',
-  //   'name': 'Collection Type',
-  //   'placeholder': '',
-  //   'required': true,
-  //   'visible': true,
-  //   'range': [
-  //     {
-  //         'value': 'andhra',
-  //         'label': 'andhra'
-  //     },
-  //     {
-  //         'value': 'karnataka',
-  //         'label': 'karnataka'
-  //     }
-  // ],
-  // },
-  // {
-  //   'code': 'additionalCategories',
-  //   'dataType': 'text',
-  //   'description': 'Additonal Category of the Content',
-  //   'editable': true,
-  //   'index': 5,
-  //   'inputType': 'select',
-  //   'label': 'Additional Category',
-  //   'name': 'Additional Category',
-  //   'placeholder': 'Select Additional Category',
-  //   'renderingHints': {
-
-  //   },
-  //   'range': '',
-  //   'required': false,
-  //   'visible': true
-  // },
-  // {
-  //   'code': 'licenseTerms',
-  //   'dataType': 'text',
-  //   'description': 'licenseTerms',
-  //   'editable': true,
-  //   'index': 5,
-  //   'inputType': 'select',
-  //   'label': 'licenseTerms',
-  //   'name': 'licenseTerms',
-  //   'placeholder': 'Select licenseTerms',
-  //   'renderingHints': {
-
-  //   },
-  //   'range': '',
-  //   'required': false,
-  //   'visible': true
-  // },
-];
-
-
-export const formConfigWithClass = [
-  {
-    'name': '',
+    'name': 'First Section',
     'fields': [{
-      'code': 'appicon',
-      'visible': true,
-      'editable': true,
-      'dataType': 'url',
-      'renderingHints': {
-        'class': 'col-start-1 col-end-2'
-      },
-      'name': 'Icon',
-      'description': 'Icon',
-      'index': 0,
-      'inputType': 'file',
-      'label': 'Icon',
-      'placeholder': 'Icon',
-      'required': true
-    },
-    {
-      'code': 'name',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {
-        'class': 'col-span-2'
-      },
-      'name': 'Name',
-      'description': 'Name of the content',
-      'inputType': 'text',
-      'index': 1,
-      'label': 'Name',
-      'placeholder': 'Name',
-      'required': true,
-      'validation': [{
-        'type': 'max',
-        'message': 'Input is Exceded',
-        'value': '120'
-      }]
-    }, {
-      'code': 'description',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {
-        'class': 'col-span-2'
-      },
-      'name': 'Description',
-      'index': 2,
-      'description': 'Brief description',
-      'inputType': 'textarea',
-      'label': 'Description',
-      'placeholder': 'Description',
-      'required': false,
-      'validation': [{
-        'type': 'max',
-        'message': 'Input is Exceded',
-        'value': '1000'
-      }],
-      'section': {
-        'index': 1,
-        'name': ''
-      }
-    }, {
-      'code': 'keywords',
-      'visible': true,
-      'editable': true,
-      'dataType': 'list',
-      'name': 'Keywords',
-      'renderingHints': {
-        'class': 'col-span-2'
-      },
-      'index': 3,
-      'description': 'Keywords for the content',
-      'inputType': 'keywordsuggestion',
-      'label': 'keywords',
-      'placeholder': 'Enter Keywords',
-      'required': false,
-      'section': {
-        'index': 1,
-        'name': ''
-      }
-    }, {
-      'code': 'primaryCategory',
-      'dataType': 'text',
-      'description': 'Collection Type',
-      'editable': false,
-      'index': 4,
-      'renderingHints': {
-
-      },
-      'inputType': 'text',
-      'label': 'Collection Type',
-      'name': 'Collection Type',
-      'placeholder': '',
-      'required': true,
-      'visible': true,
-      'section': {
-        'index': 2,
-        'name': ''
-      }
-    }, {
-      'code': 'additionalCategories',
-      'dataType': 'list',
-      'description': 'Additonal Category of the Content',
-      'editable': true,
-      'index': 5,
-      'inputType': 'multiselect',
-      'label': 'Additional Category',
-      'name': 'Additional Category',
-      'placeholder': 'Select Additional Category',
-      'renderingHints': {
-
-      },
-      'range': [
-        'Classroom Teaching Video',
-        'Concept Map',
-        'Curiosity Question Set',
-        'Textbook',
-        'Experiential Resource',
-        'Explanation Video',
-        'Focus Spot',
-        'Learning Outcome Definition',
-        'Marking Scheme Rubric',
-        'Pedagogy Flow',
-        'Lesson Plan',
-        'Previous Board Exam Papers',
-        'TV Lesson'
-      ],
-      'required': false,
-      'visible': true,
-      'section': {
-        'index': 2,
-        'name': ''
-      }
-    }, {
-      'code': 'board',
-      'visible': true,
-      'depends': ['gradeLevel', 'medium', 'subject', 'topic'],
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {
-
-      },
-      'description': 'Board',
-      'index': 6,
-      'label': 'Board/Syllabus',
-      'required': true,
-      'name': 'Board/Syllabus',
-      'inputType': 'select',
-      'placeholder': 'Select Board/Syllabus',
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'medium',
-      'visible': true,
-      'depends': ['gradeLevel', 'subject', 'topic'],
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {
-
-      },
-      'description': '',
-      'index': 7,
-      'label': 'Medium',
-      'required': true,
-      'name': 'Medium',
-      'inputType': 'multiselect',
-      'placeholder': 'Select Medium',
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'gradeLevel',
-      'visible': true,
-      'depends': ['subject', 'topic'],
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {
-
-      },
-      'description': 'Class',
-      'index': 8,
-      'label': 'Class',
-      'required': true,
-      'name': 'Class',
-      'inputType': 'multiselect',
-      'placeholder': 'Select Class',
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'subject',
-      'visible': true,
-      'depends': ['topic'],
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {
-
-      },
-      'description': '',
-      'index': 9,
-      'label': 'Subject',
-      'required': true,
-      'name': 'Subject',
-      'inputType': 'multiselect',
-      'placeholder': 'Select Subject',
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'dialcode',
-      'visible': true,
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {},
-      'name': 'QR Code',
-      'description': 'QR Code',
-      'index': 10,
-      'inputType': 'dialcode',
-      'label': 'QR Code',
-      'placeholder': 'Enter QR Code',
-      'required': false,
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'topic',
-      'visible': true,
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {},
-      'name': 'Topic',
-      'description': 'Choose a Topics',
-      'index': 11,
-      'inputType': 'topicselector',
-      'label': 'Topics',
-      'placeholder': 'Choose Topics',
-      'required': false,
-      'section': {
-        'index': 3,
-        'name': ''
-      }
-    }, {
-      'code': 'year',
-      'visible': true,
-      'editable': false,
-      'dataType': 'text',
-      'renderingHints': {},
-      'name': 'Year',
-      'description': '',
-      'index': 12,
-      'inputType': 'select',
-      'label': 'Year',
-      'placeholder': 'Select Year',
-      'required': false,
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'publisher',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {},
-      'description': 'Publication',
-      'index': 12,
-      'label': 'Publisher',
-      'required': false,
-      'name': 'Publisher',
-      'inputType': 'text',
-      'placeholder': 'Publication',
-      'validation': [{
-        'type': 'max',
-        'message': 'Input is exceded',
-        'value': '180'
-      }],
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'audience',
-      'visible': true,
-      'editable': false,
-      'dataType': 'list',
-      'renderingHints': {},
-      'description': '',
-      'index': 14,
-      'range': ['Student', 'Teacher', 'Administrator'],
-      'label': 'Audience',
-      'required': false,
-      'name': 'Audience',
-      'inputType': 'multiselect',
-      'placeholder': 'Select Audience',
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'author',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {},
-      'name': 'Author',
-      'description': 'Original Author',
-      'index': 15,
-      'inputType': 'text',
-      'label': 'Original Author',
-      'placeholder': 'Author',
-      'required': false,
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'attributions',
-      'visible': true,
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {},
-      'name': 'attribution',
-      'description': 'Attributions',
-      'index': 16,
-      'inputType': 'text',
-      'label': 'Attributions',
-      'placeholder': 'Attributions',
-      'required': false,
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'copyright',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {},
-      'name': 'Copyright',
-      'description': 'Copyright',
-      'index': 17,
-      'inputType': 'text',
-      'label': 'Copyright',
-      'placeholder': 'Copyright',
-      'required': false,
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'copyrightYear',
-      'visible': true,
-      'editable': true,
-      'dataType': 'list',
-      'renderingHints': {},
-      'description': 'Year of Creation',
-      'index': 18,
-      'label': 'Year of Creation',
-      'required': true,
-      'name': 'Year of Creation',
-      'inputType': 'number',
-      'placeholder': 'Enter Year of Creation',
-      'validation': [{
-        'type': 'min',
-        'message': 'Maximum length of the year should be 4',
-        'value': '4'
-      }, {
-        'type': 'max',
-        'message': 'Minimum length of the year should be 4',
-        'value': '4'
-      }],
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'license',
-      'visible': true,
-      'editable': true,
-      'dataType': 'text',
-      'renderingHints': {},
-      'name': 'license',
-      'description': 'License of the content',
-      'index': 19,
-      'inputType': 'licenses',
-      'label': 'license',
-      'placeholder': 'license',
-      'required': true,
-      'section': {
-        'index': 4,
-        'name': ''
-      }
-    }, {
-      'code': 'licenseterms',
-      'visible': true,
-      'editable': true,
-      'defaultValue': 'By creating any type of content (resources, books, courses etc.) on DIKSHA, you consent to publish it under the Creative Commons License Framework. Please choose the applicable creative commons license you wish to apply to your content.',
-      'dataType': 'text',
-      'renderingHints': {
-        'value': {
-          'video/x-youtube': 'By linking or uploading YouTube videos on DIKSHA, you consent to publishing it as per the terms of the YouTube video license. DIKSHA accepts only videos with YouTube Standard License or Creative Commons License.'
-        },
-      },
-      'description': 'licenseterms',
-      'index': 20,
-      'label': 'License Terms',
-      'required': false,
-      'name': 'licenseterms',
-      'inputType': 'label',
-      'placeholder': 'license',
-      'section': {
-        'index': 5,
-        'name': ''
-      }
-    }]
-  }
-];
-
-
-export const formConfigWithSection = [
-  {
-    'name': 'Content Details',
-    'fields': [
-      {
-        'code': 'appicon',
-        'visible': true,
-        'editable': true,
-        'dataType': 'url',
-        'renderingHints': {
-          'class': 'col-start-1 col-end-2'
-        },
-        'name': 'Icon',
-        'description': 'Icon',
-        'index': 0,
-        'inputType': 'file',
-        'label': 'Icon',
-        'placeholder': 'Icon',
-        'required': true
-      },
-      {
-        'code': 'name',
-        'visible': true,
-        'editable': true,
+        'code': 'title',
         'dataType': 'text',
-        'renderingHints': {
-          'class': 'col-span-2'
-        },
-        'name': 'Name',
         'description': 'Name of the content',
+        'editable': true,
         'inputType': 'text',
-        'index': 1,
-        'label': 'Name',
-        'placeholder': 'Name',
+        'label': 'Title',
+        'name': 'Title',
+        'placeholder': 'Title',
+        'renderingHints': {
+          'class': 'sb-g-col-lg-1'
+        },
         'required': true,
-        'validation': [{
+        'visible': true,
+        'validations': [{
           'type': 'max',
-          'message': 'Input is Exceded',
-          'value': '120'
-        }],
+          'value': '120',
+          'message': 'Input is Exceeded'
+        }, {
+          'type': 'required',
+          'message': 'Title is required'
+        }]
       },
       {
         'code': 'description',
-        'visible': true,
-        'editable': true,
         'dataType': 'text',
-        'renderingHints': {
-          'class': 'col-span-2'
-        },
-        'name': 'Description',
-        'index': 2,
-        'description': 'Brief description',
+        'description': 'Description of the content',
+        'default': 'asdadad',
+        'editable': true,
         'inputType': 'textarea',
         'label': 'Description',
+        'name': 'Description',
         'placeholder': 'Description',
-        'required': false,
-        'validation': [{
+        'renderingHints': {
+          'class': 'sb-g-col-lg-1'
+        },
+        'required': true,
+        'visible': true,
+        'validations': [{
           'type': 'max',
-          'message': 'Input is Exceded',
-          'value': '1000'
+          'value': '120',
+          'message': 'Input is Exceeded'
+        }, {
+          'type': 'required',
+          'message': 'Title is required'
         }]
       },
       {
@@ -1262,383 +53,773 @@ export const formConfigWithSection = [
         'visible': true,
         'editable': true,
         'dataType': 'list',
+        'default': ['one', 'two'],
         'name': 'Keywords',
         'renderingHints': {
-          'class': 'col-span-2'
+          'class': 'sb-g-col-lg-1'
         },
         'index': 3,
         'description': 'Keywords for the content',
-        'inputType': 'keywordsuggestion',
+        'inputType': 'keywords',
         'label': 'keywords',
         'placeholder': 'Enter Keywords',
-        'required': false
+        'required': false,
+        'validations': [{
+          'type': 'required',
+          'message': 'Keyword is required'
+        }]
       },
-      {
-        'code': 'primaryCategory',
-        'dataType': 'text',
-        'description': 'Collection Type',
-        'editable': false,
-        'index': 4,
-        'renderingHints': {
+      // {
+      //   'code': 'primaryCategory',
+      //   'dataType': 'text',
+      //   'description': 'Type',
+      //   'editable': true,
+      //   'index': 4,
+      //   'renderingHints': {
 
-        },
-        'inputType': 'text',
-        'label': 'Collection Type',
-        'name': 'Collection Type',
-        'placeholder': '',
-        'required': true,
-        'visible': true
-      },
+      //   },
+      //   'range': [
+      //     {
+      //       'label': 'karnataka1',
+      //       'value': 'karnataka1'
+      //     },
+      //     {
+      //       'label': 'karnataka2',
+      //       'value': 'karnataka2'
+      //     }
+      //   ],
+      //   'inputType': 'select',
+      //   'label': 'Type',
+      //   'name': 'Type',
+      //   'placeholder': '',
+      //   'required': true,
+      //   'visible': true,
+      //   'validations': [{
+      //     'type': 'required',
+      //     'message': 'Board is required'
+      //   }]
+      // },
+      // {
+      //   'code': 'additionalCategories',
+      //   'dataType': 'list',
+      //   'depends': ['title', 'primaryCategory'],
+      //   'description': 'Additonal Category of the Content',
+      //   'editable': true,
+      //   'index': 5,
+      //   'default': ['Classroom Teaching Video',
+      //     'Concept Map'
+      //   ],
+      //   'inputType': 'nestedselect',
+      //   'label': 'Additional Category',
+      //   'name': 'Additional Category',
+      //   'placeholder': 'Select Additional Category',
+      //   'renderingHints': {
+
+      //   },
+      //   'range': ['Classroom Teaching Video',
+      //     'Concept Map',
+      //     'Curiosity Question Set',
+      //     'Experiential Resource',
+      //     'Explanation Video',
+      //     'Focus Spot',
+      //     'Learning Outcome Definition',
+      //     'Lesson Plan',
+      //     'Marking Scheme Rubric',
+      //     'Pedagogy Flow',
+      //     'Previous Board Exam Papers',
+      //     'TV Lesson',
+      //     'Textbook'
+      //   ],
+      //   'required': false,
+      //   'visible': true
+      // },
+      // {
+      //   'code': 'board',
+      //   'visible': true,
+      //   'depends': ['gradeLevel', 'medium', 'subject', 'topic'],
+      //   'editable': true,
+      //   'dataType': 'text',
+      //   'renderingHints': {
+
+      //   },
+      //   'range': [],
+      //   'description': 'Board',
+      //   'index': 6,
+      //   'label': 'Board/Syllabus',
+      //   'required': true,
+      //   'name': 'Board/Syllabus',
+      //   'inputType': 'select',
+      //   'placeholder': 'Select Board/Syllabus',
+      //   'validations': [{
+      //     'type': 'required',
+      //     'message': 'Board is required'
+      //   }]
+      // }, {
+      //   'code': 'medium',
+      //   'visible': true,
+      //   'depends': ['gradeLevel', 'subject', 'topic'],
+      //   'editable': true,
+      //   'dataType': 'list',
+      //   'renderingHints': {
+
+      //   },
+      //   'description': '',
+      //   'index': 7,
+      //   'label': 'Medium',
+      //   'required': true,
+      //   'name': 'Medium',
+      //   'inputType': 'multiselect',
+      //   'placeholder': 'Select Medium',
+      //   'validations': [{
+      //     'type': 'required',
+      //     'message': 'Medium is required'
+      //   }]
+      // }, {
+      //   'code': 'gradeLevel',
+      //   'visible': true,
+      //   'depends': ['subject', 'topic'],
+      //   'editable': true,
+      //   'dataType': 'list',
+      //   'renderingHints': {
+
+      //   },
+      //   'description': 'Class',
+      //   'index': 8,
+      //   'label': 'Class',
+      //   'required': true,
+      //   'name': 'Class',
+      //   'inputType': 'multiselect',
+      //   'placeholder': 'Select Class'
+      // }, {
+      //   'code': 'subject',
+      //   'visible': true,
+      //   'depends': ['topic'],
+      //   'editable': true,
+      //   'dataType': 'list',
+      //   'renderingHints': {
+
+      //   },
+      //   'description': '',
+      //   'index': 9,
+      //   'label': 'Subject',
+      //   'required': true,
+      //   'name': 'Subject',
+      //   'inputType': 'multiselect',
+      //   'placeholder': 'Select Subject'
+      // },
       {
-        'code': 'additionalCategories',
-        'dataType': 'list',
-        'description': 'Additonal Category of the Content',
+        'code': 'topic',
+        'visible': true,
         'editable': true,
-        'index': 5,
-        'inputType': 'multiselect',
-        'label': 'Additional Category',
-        'name': 'Additional Category',
-        'placeholder': 'Select Additional Category',
-        'renderingHints': {
-
-        },
+        'dataType': 'list',
+        'default': ['ONE', 'TWO'],
+        'renderingHints': {},
+        'name': 'Topic',
+        'description': 'Choose a Topics',
+        'index': 11,
+        'inputType': 'topicselector',
+        'label': 'Topics',
+        'placeholder': 'Choose Topics',
+        'required': false,
         'range': [
           {
-              'value': 'andhra',
-              'label': 'andhra'
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_1",
+            "code": "environmentalstudies_l1Con_1",
+            "translations": null,
+            "name": "Nature Around The Kids",
+            "description": "Nature Around The Kids",
+            "index": 1,
+            "category": "topic",
+            "status": "Live"
           },
           {
-              'value': 'karnataka',
-              'label': 'karnataka'
-          }
-      ],
-        'required': false,
-        'visible': true
-      },
-      {
-        'code': 'year',
-        'visible': true,
-        'editable': false,
-        'dataType': 'text',
-        'renderingHints': {},
-        'name': 'Year',
-        'description': '',
-        'index': 12,
-        'inputType': 'select',
-        'label': 'Year',
-        'placeholder': 'Select Year',
-        'required': false
-      },
-      {
-        'code': 'publisher',
-        'visible': true,
-        'editable': true,
-        'dataType': 'text',
-        'renderingHints': {},
-        'description': 'Publication',
-        'index': 12,
-        'label': 'Publisher',
-        'required': false,
-        'name': 'Publisher',
-        'inputType': 'text',
-        'placeholder': 'Publication',
-        'validation': [{
-          'type': 'max',
-          'message': 'Input is exceded',
-          'value': '180'
-        }]
-      },
-      {
-        'code': 'audience',
-        'visible': true,
-        'editable': false,
-        'dataType': 'list',
-        'renderingHints': {},
-        'description': '',
-        'index': 14,
-        'range': ['Student', 'Teacher', 'Administrator'],
-        'label': 'Audience',
-        'required': false,
-        'name': 'Audience',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Audience'
-      },
-      {
-        'code': 'attributions',
-        'visible': true,
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {},
-        'name': 'attribution',
-        'description': 'Attributions',
-        'index': 16,
-        'inputType': 'text',
-        'label': 'Attributions',
-        'placeholder': 'Attributions',
-        'required': false
-      },
-      {
-        'code': 'author',
-        'visible': true,
-        'editable': true,
-        'dataType': 'text',
-        'renderingHints': {},
-        'name': 'Author',
-        'description': 'Original Author',
-        'index': 15,
-        'inputType': 'text',
-        'label': 'Original Author',
-        'placeholder': 'Author',
-        'required': false
-      },
-      {
-        'code': 'copyright',
-        'visible': true,
-        'editable': true,
-        'dataType': 'text',
-        'renderingHints': {},
-        'name': 'Copyright',
-        'description': 'Copyright',
-        'index': 17,
-        'inputType': 'text',
-        'label': 'Copyright',
-        'placeholder': 'Copyright',
-        'required': false
-      },
-      {
-        'code': 'copyrightYear',
-        'visible': true,
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {},
-        'description': 'Year of Creation',
-        'index': 18,
-        'label': 'Year of Creation',
-        'required': true,
-        'name': 'Year of Creation',
-        'inputType': 'number',
-        'placeholder': 'Enter Year of Creation',
-        'validation': [{
-          'type': 'min',
-          'message': 'Maximum length of the year should be 4',
-          'value': '4'
-        }, {
-          'type': 'max',
-          'message': 'Minimum length of the year should be 4',
-          'value': '4'
-        }]
-      },
-      {
-        'code': 'license',
-        'visible': true,
-        'editable': true,
-        'dataType': 'text',
-        'renderingHints': {},
-        'name': 'license',
-        'description': 'License of the content',
-        'index': 19,
-        'inputType': 'licenses',
-        'label': 'license',
-        'placeholder': 'license',
-        'required': true
-      }, {
-        'code': 'licenseterms',
-        'visible': true,
-        'editable': true,
-        'defaultValue': 'By creating any type of content (resources, books, courses etc.) on DIKSHA, you consent to publish it under the Creative Commons License Framework. Please choose the applicable creative commons license you wish to apply to your content.',
-        'dataType': 'text',
-        'renderingHints': {
-          'value': {
-            'video/x-youtube': 'By linking or uploading YouTube videos on DIKSHA, you consent to publishing it as per the terms of the YouTube video license. DIKSHA accepts only videos with YouTube Standard License or Creative Commons License.'
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_2",
+            "code": "environmentalstudies_l1Con_2",
+            "children": [
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_2_l2con_1",
+                "code": "environmentalstudies_l1con_2_l2con_1",
+                "translations": null,
+                "name": "Leaves",
+                "description": "Leaves",
+                "index": 1,
+                "category": "topic",
+                "status": "Live"
+              }
+            ],
+            "translations": null,
+            "name": "Diversity In Plants",
+            "description": "Diversity In Plants",
+            "index": 2,
+            "category": "topic",
+            "status": "Live"
           },
-        },
-        'description': 'licenseterms',
-        'index': 20,
-        'label': 'License Terms',
-        'required': false,
-        'name': 'licenseterms',
-        'inputType': 'label',
-        'placeholder': 'license'
-      }
-    ]
-  },
-  {
-    'name': 'Org Framework Deatils',
-    'fields': [
-      {
-        'code': 'board',
-        'dataType': 'text',
-        'description': 'Board',
-        'editable': true,
-        'index': 7,
-        'inputType': 'select',
-        'label': 'Board/Syllabus',
-        'name': 'Board/Syllabus',
-        'placeholder': 'Select Board/Syllabus',
-        'depends': [
-          'gradeLevel',
-          'medium',
-          'subject',
-          'topic'
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3",
+            "code": "environmentalstudies_l1Con_3",
+            "children": [
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_1",
+                "code": "environmentalstudies_l1con_3_l2con_1",
+                "translations": null,
+                "name": "Water",
+                "description": "Water",
+                "index": 1,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_2",
+                "code": "environmentalstudies_l1con_3_l2con_2",
+                "translations": null,
+                "name": "Distribution Of Water Bodies",
+                "description": "Distribution Of Water Bodies",
+                "index": 2,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_3",
+                "code": "environmentalstudies_l1con_3_l2con_3",
+                "children": [
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_3_l3con_1",
+                    "code": "environmentalstudies_l1con_3_l2con_3_l3con_1",
+                    "translations": null,
+                    "name": "Waves",
+                    "description": "Waves",
+                    "index": 1,
+                    "category": "topic",
+                    "status": "Live"
+                  },
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_3_l3con_2",
+                    "code": "environmentalstudies_l1con_3_l2con_3_l3con_2",
+                    "translations": null,
+                    "name": "Tides",
+                    "description": "Tides",
+                    "index": 2,
+                    "category": "topic",
+                    "status": "Live"
+                  }
+                ],
+                "translations": null,
+                "name": "Ocean Circulation",
+                "description": "Ocean Circulation",
+                "index": 3,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_4",
+                "code": "environmentalstudies_l1con_3_l2con_4",
+                "translations": null,
+                "name": "Tsunami In The Indian Ocean",
+                "description": "Tsunami In The Indian Ocean",
+                "index": 4,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_5",
+                "code": "environmentalstudies_l1con_3_l2con_5",
+                "translations": null,
+                "name": "Ocean Currents",
+                "description": "Ocean Currents",
+                "index": 5,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_6",
+                "code": "environmentalstudies_l1con_3_l2con_6",
+                "translations": null,
+                "name": "Water Usage",
+                "description": "Water Usage",
+                "index": 6,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_7",
+                "code": "environmentalstudies_l1con_3_l2con_7",
+                "translations": null,
+                "name": "Sources Of Water",
+                "description": "Sources Of Water",
+                "index": 7,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_8",
+                "code": "environmentalstudies_l1con_3_l2con_8",
+                "children": [
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_8_l3con_1",
+                    "code": "environmentalstudies_l1con_3_l2con_8_l3con_1",
+                    "translations": null,
+                    "name": "Disappearing Trick Of Water",
+                    "description": "Disappearing Trick Of Water",
+                    "index": 1,
+                    "category": "topic",
+                    "status": "Live"
+                  },
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_8_l3con_2",
+                    "code": "environmentalstudies_l1con_3_l2con_8_l3con_2",
+                    "translations": null,
+                    "name": "Loss Of Water By Plants",
+                    "description": "Loss Of Water By Plants",
+                    "index": 2,
+                    "category": "topic",
+                    "status": "Live"
+                  },
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_8_l3con_3",
+                    "code": "environmentalstudies_l1con_3_l2con_8_l3con_3",
+                    "translations": null,
+                    "name": "How Are Clouds Formed?",
+                    "description": "How Are Clouds Formed?",
+                    "index": 3,
+                    "category": "topic",
+                    "status": "Live"
+                  }
+                ],
+                "translations": null,
+                "name": "Water Cycle",
+                "description": "Water Cycle",
+                "index": 8,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_9",
+                "code": "environmentalstudies_l1con_3_l2con_9",
+                "translations": null,
+                "name": "Ocean",
+                "description": "Ocean",
+                "index": 9,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_10",
+                "code": "environmentalstudies_l1con_3_l2con_10",
+                "translations": null,
+                "name": "Heavy Rainfall",
+                "description": "Heavy Rainfall",
+                "index": 10,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_11",
+                "code": "environmentalstudies_l1con_3_l2con_11",
+                "translations": null,
+                "name": "Lack Of Rainfall",
+                "description": "Lack Of Rainfall",
+                "index": 11,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_12",
+                "code": "environmentalstudies_l1con_3_l2con_12",
+                "translations": null,
+                "name": "Water Conservation",
+                "description": "Water Conservation",
+                "index": 12,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_13",
+                "code": "environmentalstudies_l1con_3_l2con_13",
+                "translations": null,
+                "name": "Rainwater Harvesting",
+                "description": "Rainwater Harvesting",
+                "index": 13,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_14",
+                "code": "environmentalstudies_l1con_3_l2con_14",
+                "translations": null,
+                "name": "Availability Of Water",
+                "description": "Availability Of Water",
+                "index": 14,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_15",
+                "code": "environmentalstudies_l1con_3_l2con_15",
+                "translations": null,
+                "name": "Forms Of Water",
+                "description": "Forms Of Water",
+                "index": 15,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_16",
+                "code": "environmentalstudies_l1con_3_l2con_16",
+                "translations": null,
+                "name": "Groundwater",
+                "description": "Groundwater",
+                "index": 16,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_17",
+                "code": "environmentalstudies_l1con_3_l2con_17",
+                "children": [
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_17_l3con_1",
+                    "code": "environmentalstudies_l1con_3_l2con_17_l3con_1",
+                    "translations": null,
+                    "name": "Increasing Population",
+                    "description": "Increasing Population",
+                    "index": 1,
+                    "category": "topic",
+                    "status": "Live"
+                  },
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_17_l3con_2",
+                    "code": "environmentalstudies_l1con_3_l2con_17_l3con_2",
+                    "translations": null,
+                    "name": "Increasing Industries",
+                    "description": "Increasing Industries",
+                    "index": 2,
+                    "category": "topic",
+                    "status": "Live"
+                  },
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_17_l3con_3",
+                    "code": "environmentalstudies_l1con_3_l2con_17_l3con_3",
+                    "translations": null,
+                    "name": "Agricultural Activities",
+                    "description": "Agricultural Activities",
+                    "index": 3,
+                    "category": "topic",
+                    "status": "Live"
+                  }
+                ],
+                "translations": null,
+                "name": "Depletion Of Water Table",
+                "description": "Depletion Of Water Table",
+                "index": 17,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_18",
+                "code": "environmentalstudies_l1con_3_l2con_18",
+                "translations": null,
+                "name": "Distribution Of Water",
+                "description": "Distribution Of Water",
+                "index": 18,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_19",
+                "code": "environmentalstudies_l1con_3_l2con_19",
+                "translations": null,
+                "name": "Water Management",
+                "description": "Water Management",
+                "index": 19,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_20",
+                "code": "environmentalstudies_l1con_3_l2con_20",
+                "children": [
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_20_l3con_1",
+                    "code": "environmentalstudies_l1con_3_l2con_20_l3con_1",
+                    "translations": null,
+                    "name": "Water-wise Habits",
+                    "description": "Water-wise Habits",
+                    "index": 1,
+                    "category": "topic",
+                    "status": "Live"
+                  }
+                ],
+                "translations": null,
+                "name": "Individual Responsibility",
+                "description": "Individual Responsibility",
+                "index": 20,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_3_l2con_21",
+                "code": "environmentalstudies_l1con_3_l2con_21",
+                "translations": null,
+                "name": "Water Scarcity On Plants",
+                "description": "Water Scarcity On Plants",
+                "index": 21,
+                "category": "topic",
+                "status": "Live"
+              }
+            ],
+            "translations": null,
+            "name": "Water",
+            "description": "Water",
+            "index": 3,
+            "category": "topic",
+            "status": "Live"
+          },
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_4",
+            "code": "environmentalstudies_l1Con_4",
+            "translations": null,
+            "name": "School And Family",
+            "description": "School And Family",
+            "index": 4,
+            "category": "topic",
+            "status": "Live"
+          },
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_5",
+            "code": "environmentalstudies_l1Con_5",
+            "children": [
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_5_l2con_1",
+                "code": "environmentalstudies_l1con_5_l2con_1",
+                "translations": null,
+                "name": "Home",
+                "description": "Home",
+                "index": 1,
+                "category": "topic",
+                "status": "Live"
+              }
+            ],
+            "translations": null,
+            "name": "House And Home",
+            "description": "House And Home",
+            "index": 5,
+            "category": "topic",
+            "status": "Live"
+          },
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_6",
+            "code": "environmentalstudies_l1Con_6",
+            "translations": null,
+            "name": "Food Habits",
+            "description": "Food Habits",
+            "index": 6,
+            "category": "topic",
+            "status": "Live"
+          },
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_7",
+            "code": "environmentalstudies_l1Con_7",
+            "children": [
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_7_l2con_1",
+                "code": "environmentalstudies_l1con_7_l2con_1",
+                "translations": null,
+                "name": "Different Abilities",
+                "description": "Different Abilities",
+                "index": 1,
+                "category": "topic",
+                "status": "Live"
+              }
+            ],
+            "translations": null,
+            "name": "Creative Expression Abilities",
+            "description": "Creative Expression Abilities",
+            "index": 7,
+            "category": "topic",
+            "status": "Live"
+          },
+          {
+            "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_8",
+            "code": "environmentalstudies_l1Con_8",
+            "children": [
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_8_l2con_1",
+                "code": "environmentalstudies_l1con_8_l2con_1",
+                "translations": null,
+                "name": "Bird Feet",
+                "description": "Bird Feet",
+                "index": 1,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_8_l2con_2",
+                "code": "environmentalstudies_l1con_8_l2con_2",
+                "translations": null,
+                "name": "Bird Beaks",
+                "description": "Bird Beaks",
+                "index": 2,
+                "category": "topic",
+                "status": "Live"
+              },
+              {
+                "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_8_l2con_3",
+                "code": "environmentalstudies_l1con_8_l2con_3",
+                "children": [
+                  {
+                    "identifier": "ekstep_ncert_k-12_topic_environmentalstudies_l1con_8_l2con_3_l3con_1",
+                    "code": "environmentalstudies_l1con_8_l2con_3_l3con_1",
+                    "translations": null,
+                    "name": "Find Out About Your Own Teeth And Write;",
+                    "description": "Find Out About Your Own Teeth And Write;",
+                    "index": 1,
+                    "category": "topic",
+                    "status": "Live"
+                  }
+                ],
+                "translations": null,
+                "name": "Animal Teeth",
+                "description": "Animal Teeth",
+                "index": 3,
+                "category": "topic",
+                "status": "Live"
+              }
+            ],
+            "translations": null,
+            "name": "Birds",
+            "description": "Birds",
+            "index": 8,
+            "category": "topic",
+            "status": "Live"
+          }
         ],
-        'renderingHints': {
-          'class': 'col-span-2'
-        },
-        'required': true,
-        'visible': true
+        'validations': [{
+          'type': 'required',
+          'message': 'Topic is required'
+        }]
       },
-      {
-        'code': 'medium',
-        'visible': true,
-        'depends': ['gradeLevel', 'subject', 'topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': '',
-        'index': 7,
-        'label': 'Medium',
-        'required': true,
-        'name': 'Medium',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Medium'
-      },
-      {
-        'code': 'gradeLevel',
-        'visible': true,
-        'depends': ['subject', 'topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': 'Class',
-        'index': 8,
-        'label': 'Class',
-        'required': true,
-        'name': 'Class',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Class'
-      },
-      {
-        'code': 'subject',
-        'visible': true,
-        'depends': ['topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': '',
-        'index': 9,
-        'label': 'Subject',
-        'required': true,
-        'name': 'Subject',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Subject'
-      },
-      {
-        'code': 'topic',
-        'visible': true,
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {},
-        'name': 'Topic',
-        'description': 'Choose a Topics',
-        'index': 11,
-        'inputType': 'topicselector',
-        'label': 'Topics',
-        'placeholder': 'Choose Topics',
-        'required': false
-      }
+      // {
+      //   'code': 'audience',
+      //   'dataType': 'list',
+      //   'description': 'Audience',
+      //   'editable': true,
+      //   'inputType': 'select',
+      //   'label': 'Audience',
+      //   'name': 'Audience',
+      //   'placeholder': 'Select Audience',
+      //   'renderingHints': {
+      //     'class': 'sb-g-col-lg-1'
+      //   },
+      //   'required': true,
+      //   'visible': true,
+      //   'range': ['Student', 'Teacher', 'Administrator'],
+      // },
+      // {
+      //   'code': 'showFeedback',
+      //   'dataType': 'boolean',
+      //   'description': 'Show Feedback',
+      //   'editable': false,
+      //   'default': true,
+      //   'index': 5,
+      //   'inputType': 'checkbox',
+      //   'label': 'Show Feedback',
+      //   'name': 'showFeedback',
+      //   'placeholder': 'Show Feedback',
+      //   'renderingHints': {},
+      //   'required': false,
+      //   'visible': true
+      // },
+      // {
+      //   'code': 'shuffleQuestions',
+      //   'dataType': 'text',
+      //   'description': 'Shuffle Questions',
+      //   'editable': true,
+      //   'default': '',
+      //   'index': 5,
+      //   'inputType': 'checkbox',
+      //   'label': 'Shuffle Questions',
+      //   'name': 'Shuffle Questions',
+      //   'placeholder': 'Shuffle Questions',
+      //   'renderingHints': {},
+      //   'required': false,
+      //   'visible': true
+      // },
+      // {
+      //   'code': 'showQuestions',
+      //   'dataType': 'text',
+      //   'description': 'Show Questions',
+      //   'editable': true,
+      //   'index': 5,
+      //   'inputType': 'select',
+      //   'label': 'Show Questions',
+      //   'name': 'showQuestions',
+      //   'placeholder': 'Show Questions',
+      //   'renderingHints': {},
+      //   'required': false,
+      //   'visible': true,
+      //   'range': ''
+      // },
+      // {
+      //   'code': 'author',
+      //   'dataType': 'text',
+      //   'description': 'Author of the content',
+      //   'editable': true,
+      //   'inputType': 'text',
+      //   'label': 'Author',
+      //   'name': 'Author',
+      //   'placeholder': 'Author',
+      //   'renderingHints': {
+      //     'class': 'sb-g-col-lg-1'
+      //   },
+      //   'required': true,
+      //   'visible': true,
+      // },
+      // {
+      //   'code': 'attributions',
+      //   'dataType': 'text',
+      //   'description': 'Attributions',
+      //   'editable': true,
+      //   'inputType': 'text',
+      //   'label': 'Attributions',
+      //   'name': 'Attributions',
+      //   'placeholder': 'Attributions',
+      //   'renderingHints': {
+      //     'class': 'sb-g-col-lg-1'
+      //   },
+      //   'required': true,
+      //   'visible': true,
+      // },
+      // {
+      //   'code': 'copyright',
+      //   'dataType': 'text',
+      //   'description': 'Copyright & year',
+      //   'editable': true,
+      //   'inputType': 'text',
+      //   'label': 'Copyright & year',
+      //   'name': 'Copyright & year',
+      //   'placeholder': 'Copyright & year',
+      //   'renderingHints': {
+      //     'class': 'sb-g-col-lg-1'
+      //   },
+      //   'required': true,
+      //   'visible': true,
+      // },
+      // {
+      //   'code': 'license',
+      //   'dataType': 'text',
+      //   'description': 'license',
+      //   'editable': true,
+      //   'inputType': 'select',
+      //   'label': 'license',
+      //   'name': 'license',
+      //   'placeholder': 'Select license',
+      //   'renderingHints': {
+      //     'class': 'sb-g-col-lg-1'
+      //   },
+      //   'required': true,
+      //   'visible': true,
+      //   'range': ''
+      // }
     ]
   },
-  {
-    'name': 'Target Framework Details',
-    'fields': [
-      {
-        'code': 'board',
-        'visible': true,
-        'depends': ['gradeLevel', 'medium', 'subject', 'topic'],
-        'editable': true,
-        'dataType': 'text',
-        'renderingHints': {
-
-        },
-        'description': 'Board',
-        'index': 6,
-        'label': 'Board/Syllabus',
-        'required': true,
-        'name': 'Board/Syllabus',
-        'inputType': 'select',
-        'placeholder': 'Select Board/Syllabus'
-      },
-      {
-        'code': 'medium',
-        'visible': true,
-        'depends': ['gradeLevel', 'subject', 'topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': '',
-        'index': 7,
-        'label': 'Medium',
-        'required': true,
-        'name': 'Medium',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Medium'
-      },
-      {
-        'code': 'gradeLevel',
-        'visible': true,
-        'depends': ['subject', 'topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': 'Class',
-        'index': 8,
-        'label': 'Class',
-        'required': true,
-        'name': 'Class',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Class'
-      },
-      {
-        'code': 'subject',
-        'visible': true,
-        'depends': ['topic'],
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {
-
-        },
-        'description': '',
-        'index': 9,
-        'label': 'Subject',
-        'required': true,
-        'name': 'Subject',
-        'inputType': 'multiselect',
-        'placeholder': 'Select Subject'
-      },
-      {
-        'code': 'topic',
-        'visible': true,
-        'editable': true,
-        'dataType': 'list',
-        'renderingHints': {},
-        'name': 'Topic',
-        'description': 'Choose a Topics',
-        'index': 11,
-        'inputType': 'topicselector',
-        'label': 'Topics',
-        'placeholder': 'Choose Topics',
-        'required': false
-      }
-    ]
-  }
 ];

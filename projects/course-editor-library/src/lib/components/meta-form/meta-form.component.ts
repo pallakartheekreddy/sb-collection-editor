@@ -37,13 +37,16 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   // }
 
   attachDefaultValues() {
-    this.formDataConfig = _.map(formConfig, val => {
+    this.formDataConfig = _.map(_.get(_.find(_.cloneDeep(formConfig), config => config.name === 'First Section'), 'fields'), val => {
       if (_.get(this.metaDataFields, val.code)) {
         val['default'] = _.get(this.metaDataFields, val.code);
       }
+      if (val.code === 'title' && _.get(this.metaDataFields, 'name')) {
+        val['default'] = _.get(this.metaDataFields, 'name');
+      }
       return val;
     });
-    console.log('config--->', this.formDataConfig);
+    // console.log('config--->', this.formDataConfig);
   }
 
   outputData(eventData) {
@@ -64,9 +67,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(eventData) {
     if (eventData) {
-      console.log('eventData valueChanges ------>', eventData);
-      this.metaDataFields = eventData;
-      this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
+      _.forIn(eventData, (val, key) => {
+        // tslint:disable-next-line:no-string-literal
+        key === 'title' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
+      });
+      this.treeService.setNodeTitle(_.get(eventData, 'title'));
     }
   }
 

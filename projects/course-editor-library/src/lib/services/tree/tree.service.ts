@@ -139,6 +139,8 @@ export class TreeService {
             // const modificationData = {root: false, metadata: {..._.pick(newMetadata, key)}, ...(node.data.id.includes('do_') ? {isNew: false} : {isNew: true})};
             this.setTreeCache(node.data.id, _.pick(newMetadata, key));
           }
+        } else {
+          this.setTreeCache(node.data.id, _.pick(newMetadata, key));
         }
       }
     }
@@ -165,12 +167,10 @@ export class TreeService {
   }
 
   setNodeTitle(nTitle) {
-    console.log('before Title ------>', nTitle);
     if (!nTitle) {
       nTitle = 'Untitled';
     }
     // title = instance.removeSpecialChars(title);
-    console.log('Title ------>', nTitle);
     this.getActiveNode().applyPatch({ title: nTitle }).done((a, b) => {
       // instance.onRenderNode(undefined, { node: ecEditor.jQuery(‘#collection-tree’).fancytree(‘getTree’).getActiveNode() }, true)
     });

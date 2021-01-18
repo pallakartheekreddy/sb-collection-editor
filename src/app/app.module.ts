@@ -1,4 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { NgModule } from '@angular/core';
 import { QuestionEditorLibraryModule } from 'question-editor-library';
 import { CourseEditorLibraryModule } from 'course-editor-library';
@@ -15,7 +17,8 @@ import { CourseEditorComponent } from './course-editor/course-editor.component';
     BrowserModule,
     QuestionEditorLibraryModule,
     CourseEditorLibraryModule,
-    EditorRoutingModule
+    EditorRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
