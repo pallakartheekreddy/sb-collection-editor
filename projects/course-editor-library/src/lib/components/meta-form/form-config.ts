@@ -133,80 +133,95 @@ export const formConfig = [
       //   'required': false,
       //   'visible': true
       // },
-      // {
-      //   'code': 'board',
-      //   'visible': true,
-      //   'depends': ['gradeLevel', 'medium', 'subject', 'topic'],
-      //   'editable': true,
-      //   'dataType': 'text',
-      //   'renderingHints': {
-
-      //   },
-      //   'range': [],
-      //   'description': 'Board',
-      //   'index': 6,
-      //   'label': 'Board/Syllabus',
-      //   'required': true,
-      //   'name': 'Board/Syllabus',
-      //   'inputType': 'select',
-      //   'placeholder': 'Select Board/Syllabus',
-      //   'validations': [{
-      //     'type': 'required',
-      //     'message': 'Board is required'
-      //   }]
-      // }, {
-      //   'code': 'medium',
-      //   'visible': true,
-      //   'depends': ['gradeLevel', 'subject', 'topic'],
-      //   'editable': true,
-      //   'dataType': 'list',
-      //   'renderingHints': {
-
-      //   },
-      //   'description': '',
-      //   'index': 7,
-      //   'label': 'Medium',
-      //   'required': true,
-      //   'name': 'Medium',
-      //   'inputType': 'multiselect',
-      //   'placeholder': 'Select Medium',
-      //   'validations': [{
-      //     'type': 'required',
-      //     'message': 'Medium is required'
-      //   }]
-      // }, {
-      //   'code': 'gradeLevel',
-      //   'visible': true,
-      //   'depends': ['subject', 'topic'],
-      //   'editable': true,
-      //   'dataType': 'list',
-      //   'renderingHints': {
-
-      //   },
-      //   'description': 'Class',
-      //   'index': 8,
-      //   'label': 'Class',
-      //   'required': true,
-      //   'name': 'Class',
-      //   'inputType': 'multiselect',
-      //   'placeholder': 'Select Class'
-      // }, {
-      //   'code': 'subject',
-      //   'visible': true,
-      //   'depends': ['topic'],
-      //   'editable': true,
-      //   'dataType': 'list',
-      //   'renderingHints': {
-
-      //   },
-      //   'description': '',
-      //   'index': 9,
-      //   'label': 'Subject',
-      //   'required': true,
-      //   'name': 'Subject',
-      //   'inputType': 'multiselect',
-      //   'placeholder': 'Select Subject'
-      // },
+      {
+        code: 'board',
+        default: 'State (Gujarat)',
+        visible: true,
+        depends: ['gradeLevel', 'medium', 'subject', 'topic'],
+        editable: true,
+        dataType: 'text',
+        renderingHints: {class: 'sb-g-col-lg-1'},
+        description: 'Board',
+        index: 6,
+        label: 'Board/Syllabus',
+        required: true,
+        name: 'Board/Syllabus',
+        inputType: 'select',
+        placeholder: 'Select Board/Syllabus',
+        section: {
+          index: 3,
+          name: ''
+        },
+        validations: [{
+          type: 'required',
+          message: 'Board is required'
+        }],
+        range : ['State (Gujarat)']
+      }, {
+        code: 'medium',
+        visible: true,
+        depends: ['gradeLevel', 'subject', 'topic'],
+        editable: true,
+        default: 'Hindi',
+        dataType: 'list',
+        renderingHints: {class: 'sb-g-col-lg-1'},
+        description: '',
+        index: 7,
+        label: 'Medium',
+        required: true,
+        name: 'Medium',
+        inputType: 'select',
+        placeholder: 'Select Medium',
+        section: {
+          index: 3,
+          name: ''
+        },
+        validations: [{
+          type: 'required',
+          message: 'Medium is required'
+        }],
+        range : ['Hindi']
+      }, {
+        code: 'gradeLevel',
+        visible: true,
+        depends: ['subject', 'topic'],
+        editable: true,
+        default: 'Grade 12',
+        dataType: 'list',
+        renderingHints: {class: 'sb-g-col-lg-1'},
+        description: 'Class',
+        index: 8,
+        label: 'Class',
+        required: true,
+        name: 'Class',
+        inputType: 'select',
+        placeholder: 'Select Class',
+        section: {
+          index: 3,
+          name: ''
+        },
+        range : ['Grade 12']
+      }, {
+        code: 'subject',
+        visible: true,
+        depends: ['topic'],
+        editable: true,
+        default: 'English',
+        dataType: 'list',
+        renderingHints: {class: 'sb-g-col-lg-1'},
+        description: '',
+        index: 9,
+        label: 'Subject',
+        required: true,
+        name: 'Subject',
+        inputType: 'select',
+        placeholder: 'Select Subject',
+        section: {
+          index: 3,
+          name: ''
+        },
+        range : ['English']
+      },
       {
         'code': 'topic',
         'visible': true,

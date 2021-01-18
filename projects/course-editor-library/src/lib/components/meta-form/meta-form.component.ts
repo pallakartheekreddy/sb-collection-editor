@@ -14,8 +14,10 @@ import {formConfig} from './form-config';
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   private onComponentDestroy$ = new Subject<any>();
-  public metaDataFields: {};
+  public metaDataFields: any;
   public formDataConfig;
+  public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject'];
+  public unitLevelConfig = ['title', 'description', 'keywords', 'topic'];
   @Output() public prevNodeMeatadata: EventEmitter<IeventData> = new EventEmitter();
   constructor(private editorService: EditorService, public treeService: TreeService) { }
 
@@ -37,7 +39,15 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   // }
 
   attachDefaultValues() {
-    this.formDataConfig = _.map(_.get(_.find(_.cloneDeep(formConfig), config => config.name === 'First Section'), 'fields'), val => {
+    // tslint:disable-next-line:max-line-length
+    this.formDataConfig = _.map(_.filter(_.get(_.find(_.cloneDeep(formConfig), config => config.name === 'First Section'), 'fields'), data => {
+      if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, data.code)) {
+        return data;
+      } else if (this.metaDataFields.visibility === 'Parent' && _.includes(this.unitLevelConfig, data.code)) {
+        console.log('---->//////', data);
+        return data;
+      }
+    }), val => {
       if (_.get(this.metaDataFields, val.code)) {
         val['default'] = _.get(this.metaDataFields, val.code);
       }
