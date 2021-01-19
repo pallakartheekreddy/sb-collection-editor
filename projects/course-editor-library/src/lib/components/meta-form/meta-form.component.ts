@@ -15,6 +15,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
+  public formOutputData: any;
+  public valueChange: boolean;
   public formDataConfig;
   public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject'];
   public unitLevelConfig = ['title', 'description', 'keywords', 'topic'];
@@ -28,7 +30,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.editorService.formData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
       console.log('incoming data --->', data);
-      this.prevNodeMeatadata.emit({type: data.type, metadata: this.metaDataFields});
+      if (this.valueChange || data.type === 'saveContent') {
+        this.prevNodeMeatadata.emit({type: data.type, metadata: this.formOutputData || this.metaDataFields});
+        this.valueChange = false;
+      }
       this.metaDataFields = data.metadata ? data.metadata : this.metaDataFields;
       this.attachDefaultValues();
     });
@@ -43,7 +48,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.formDataConfig = _.map(_.filter(_.get(_.find(_.cloneDeep(formConfig), config => config.name === 'First Section'), 'fields'), data => {
       if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, data.code)) {
         return data;
-      } else if (this.metaDataFields.visibility === 'Parent' && _.includes(this.unitLevelConfig, data.code)) {
+      } else if (_.includes(this.unitLevelConfig, data.code)) {
         console.log('---->//////', data);
         return data;
       }
@@ -77,9 +82,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(eventData) {
     if (eventData) {
+      this.valueChange = true;
+      this.formOutputData = {};
       _.forIn(eventData, (val, key) => {
         // tslint:disable-next-line:no-string-literal
         key === 'title' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
+        key === 'title' ? this.formOutputData['name'] = val : this.formOutputData[key] = val;
       });
       this.treeService.setNodeTitle(_.get(eventData, 'title'));
     }
