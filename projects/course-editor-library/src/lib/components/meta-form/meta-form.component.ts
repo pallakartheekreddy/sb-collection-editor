@@ -15,6 +15,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
+  public formOutputData: any;
+  public valueChange: boolean;
   public formDataConfig;
   public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject', 'topic',
   'boardIds', 'gradeLevelIds', 'subjectIds', 'mediumIds', 'topicsIds',
@@ -30,7 +32,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.editorService.formData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
       console.log('incoming data --->', data);
-      this.prevNodeMeatadata.emit({type: data.type, metadata: this.metaDataFields});
+      if (this.valueChange || data.type === 'saveContent') {
+        this.prevNodeMeatadata.emit({type: data.type, metadata: this.formOutputData || this.metaDataFields});
+        this.valueChange = false;
+      }
       this.metaDataFields = data.metadata ? data.metadata : this.metaDataFields;
       this.attachDefaultValues();
     });
@@ -91,6 +96,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(eventData) {
     if (eventData) {
+      this.valueChange = true;
+      this.formOutputData = {};
       _.forIn(eventData, (val, key) => {
         // tslint:disable-next-line:no-string-literal
         key === 'name' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
