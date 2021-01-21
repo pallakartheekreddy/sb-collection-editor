@@ -18,7 +18,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public formOutputData: any;
   public valueChange: boolean;
   public formDataConfig;
-  public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject'];
+  // tslint:disable-next-line:max-line-length
+  public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject', 'year', 'publisher', 'audience', 'author', 'attributions', 'copyright', 'license'];
   public unitLevelConfig = ['title', 'description', 'keywords', 'topic'];
   @Output() public prevNodeMeatadata: EventEmitter<IeventData> = new EventEmitter();
   constructor(private editorService: EditorService, public treeService: TreeService) { }
@@ -44,22 +45,24 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   // }
 
   attachDefaultValues() {
-    // tslint:disable-next-line:max-line-length
-    this.formDataConfig = _.map(_.filter(_.get(_.find(_.cloneDeep(formConfig), config => config.name === 'First Section'), 'fields'), data => {
-      if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, data.code)) {
-        return data;
-      } else if (_.includes(this.unitLevelConfig, data.code)) {
-        console.log('---->//////', data);
-        return data;
-      }
-    }), val => {
-      if (_.get(this.metaDataFields, val.code)) {
-        val['default'] = _.get(this.metaDataFields, val.code);
-      }
-      if (val.code === 'title' && _.get(this.metaDataFields, 'name')) {
-        val['default'] = _.get(this.metaDataFields, 'name');
-      }
-      return val;
+    this.formDataConfig = _.map(_.cloneDeep(formConfig), section => {
+      const requiredFields = _.filter(_.get(section, 'fields'), val => {
+        if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, val.code)) {
+          return val;
+        } else if (_.includes(this.unitLevelConfig, val.code)) {
+          return val;
+        }
+      });
+      _.forEach(requiredFields, field => {
+        if (_.get(this.metaDataFields, field.code)) {
+          field['default'] = _.get(this.metaDataFields, field.code);
+        }
+        if (field.code === 'title' && _.get(this.metaDataFields, 'name')) {
+          field['default'] = _.get(this.metaDataFields, 'name');
+        }
+      });
+      section.fields = requiredFields;
+      return section;
     });
     // console.log('config--->', this.formDataConfig);
   }

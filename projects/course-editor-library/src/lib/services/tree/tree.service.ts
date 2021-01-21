@@ -10,7 +10,7 @@ import * as _ from 'lodash-es';
   providedIn: 'root'
 })
 export class TreeService {
-  config: any = editorConfig;
+  config: any = _.cloneDeep(editorConfig);
   treeCache = {
     nodesModified: {},
     nodes: []
@@ -32,34 +32,31 @@ export class TreeService {
     this.treeNativeElement = el;
   }
 
-  addNode(objectType, data, createType) {
+  addNode(data, createType) {
     let newNode;
     data = data || {};
     const selectedNode = this.getActiveNode();
     const node: any = {};
-    node.title = data.name ? (data.name) : 'Untitled ' + objectType.label;
-    node.tooltip = data.name;
-    node.objectType = data.contentType || objectType.type;
+    // tslint:disable-next-line:max-line-length
+    const nodeConfig = (createType === 'sibling') ? this.config.editorConfig.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.editorConfig.hierarchy[`level${selectedNode.getLevel()}`];
+    node.title = data.name ? (data.name) : _.get(nodeConfig, 'name');
+    node.tooltip = node.tiltle;
+    node.objectType = (data.visibility && data.visibility === 'Default') ? data.primaryCategory : nodeConfig.type;
     node.id = data.identifier ? data.identifier : UUID.UUID();
     node.root = false;
-    node.folder = (data.visibility && data.visibility === 'Default') ? false : (objectType.childrenTypes.length > 0);
-    node.icon = (data.visibility && data.visibility === 'Default') ? 'fa fa-file-o' : objectType.iconClass;
+    node.folder = (data.visibility && data.visibility === 'Default') ? false : true;
+    node.icon = (data.visibility && data.visibility === 'Default') ? 'fa fa-file-o' : _.get(nodeConfig, 'iconClass');
     node.metadata = data;
     if (node.folder) {
-      // to check child node should not be created more than the set configlevel
-      if ((selectedNode.getLevel() >= this.config.editorConfig.rules.levels - 1) && createType === 'child') {
-        alert('Sorry, this operation is not allowed.');
-        return;
-      }
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
       if (_.isEmpty(newNode.data.metadata)) {
         // tslint:disable-next-line:max-line-length
-        newNode.data.metadata = { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title };
+        newNode.data.metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title };
       }
       // tslint:disable-next-line:max-line-length
       // const modificationData = { isNew: true, root: false, metadata: { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
       // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title };
+      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title };
       this.setTreeCache(node.id, metadata);
     } else {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);

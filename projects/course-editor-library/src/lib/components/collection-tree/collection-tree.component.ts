@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { editorConfig } from '../../editor.config';
+import { TreeService, EditorService } from '../../services';
 
 @Component({
   selector: 'lib-collection-tree-new',
@@ -11,10 +12,10 @@ import { editorConfig } from '../../editor.config';
 export class CollectionTreeComponent implements OnInit {
 
   @Input() public nodes: any;
-  config: any = editorConfig;
+  config: any = _.cloneDeep(editorConfig);
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public rootNode: any;
-  constructor() { }
+  constructor( public treeService: TreeService) { }
 
   ngOnInit() {
     this.initialize();
@@ -27,46 +28,43 @@ export class CollectionTreeComponent implements OnInit {
       'id': data.identifier || UUID.UUID(),
       'title': data.name,
       'tooltip': data.name,
-      'objectType': data.contentType,
+      'objectType': data.primaryCategory,
       'metadata': _.omit(data, ['children', 'collections']),
       'folder': true,
       'children': treeData,
       'root': true,
-      'icon': this.getObjectType(data.contentType).iconClass
+      'icon': _.get(this.config, 'editorConfig.iconClass')
     }];
   }
 
-  buildTree(data, tree?) {
+  buildTree(data, tree?, level?) {
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    data['level'] = level ? (level + 1) : 1;
     _.forEach(data.children, (child) => {
-      const objectType = this.getObjectType(child.contentType);
+      // const objectType = this.getObjectType(child.contentType);
+      console.log(data.level, child.name, _.get(this.config, `editorConfig.hierarchy.level${data.level}.iconClass`), '-------->NNNNNN');
       const childTree = [];
-      if (objectType) {
-        tree.push({
-          'id': child.identifier || UUID.UUID(),
-          'title': child.name,
-          'tooltip': child.name,
-          'objectType': child.contentType,
-          'metadata': _.omit(child, ['children', 'collections']),
-          'folder': child.visibility === 'Default' ? false : (objectType.childrenTypes.length > 0),
-          'children': childTree,
-          'root': false,
-          'icon': child.visibility === 'Default' ? 'fa fa-file-o' : this.getObjectType(child.contentType).iconClass
-        });
-        if (child.visibility === 'Parent') {
-          this.buildTree(child, childTree);
-        }
+      // if (objectType) {
+      tree.push({
+        'id': child.identifier || UUID.UUID(),
+        'title': child.name,
+        'tooltip': child.name,
+        'objectType': _.get(this.config, `editorConfig.hierarchy.level.${data.level}.type`),
+        'metadata': _.omit(child, ['children', 'collections']),
+        'folder': true,
+        'children': childTree,
+        'root': false,
+        'icon': _.get(this.config, `editorConfig.hierarchy.level.${data.level}.iconClass`) || 'fa fa-folder-o'
+      });
+      if (child.visibility === 'Parent') {
+        this.buildTree(child, childTree, data.level);
       }
+      // }
     });
     return tree;
   }
 
-  getObjectType(type) {
-    return _.find(this.config.editorConfig.rules.objectTypes, (obj) => {
-      return obj.type === type;
-    });
-  }
 
   public treeEventListener(event: any) {
     switch (event.type) {

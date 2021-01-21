@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeService, EditorService } from '../../services';
-import { toolbarConfig, collectionTreeNodes } from '../../editor.config';
+import { toolbarConfig } from '../../editor.config';
 import { ActivatedRoute } from '@angular/router';
 import { concatMap, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';

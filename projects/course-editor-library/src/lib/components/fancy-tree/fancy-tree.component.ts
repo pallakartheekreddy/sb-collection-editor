@@ -4,7 +4,7 @@ import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { EditorService, TreeService } from '../../services';
-import { editorConfig } from '../../editor.config';
+import { editorConfig, rootMenuTemplate, folderMenuTemplate } from '../../editor.config';
 import { Observable, Subject } from 'rxjs';
 declare var $: any;
 
@@ -182,18 +182,21 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   addChild(resource?) {
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
-    const node = tree.getActiveNode();
-    if (this.getObjectType(node.data.objectType).editable) {
-      const childrenTypes = this.getObjectType(rootNode.data.objectType).childrenTypes;
-      if (resource) {
-        this.treeService.addNode(this.getObjectType('Resource'), resource, 'child');
-      } else {
-        this.treeService.addNode(this.getObjectType(childrenTypes[0]), {}, 'child');
-      }
-      // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
-    } else {
-      alert('Sorry, this operation is not allowed.');
+    const nodeConfig = this.config.editorConfig.hierarchy[tree.getActiveNode().getLevel()];
+    const childrenTypes = _.get(nodeConfig, 'children.Content');
+    if ((((tree.getActiveNode().getLevel() - 1) >= this.config.editorConfig.maxDepth))) {
+      return alert('Sorry, this operation is not allowed...');
     }
+    if (resource) {
+      if (_.includes(childrenTypes, resource.primaryCategory)) {
+        this.treeService.addNode(resource, 'child');
+      } else {
+        alert('Invalida Content Type ....');
+      }
+    } else {
+      this.treeService.addNode({}, 'child');
+    }
+      // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
   }
 
   addSibling() {
@@ -202,8 +205,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
 
     const node = tree.getActiveNode();
     if (!node.data.root) {
-      const childrenTypes = this.getObjectType(rootNode.data.objectType).childrenTypes;
-      this.treeService.addNode(this.getObjectType(childrenTypes[0]), {}, 'sibling');
+      this.treeService.addNode({}, 'sibling');
       // this.treeEventEmitter.emit({'type': 'addSibling', 'data' : 'sibling'});
     } else {
       alert('Sorry, this operation is not allowed.');
@@ -214,26 +216,11 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     return $(this.tree.nativeElement).fancytree('getTree').getActiveNode();
   }
 
-  getObjectType(type) {
-    return _.find(this.config.editorConfig.rules.objectTypes, (obj) => {
-      return obj.type === type;
-    });
-  }
-
   attachContextMenu(node, activeNode?) {
     const $nodeSpan = $(node.span);
     // const deleteTemplate = `<span> <i class="fa fa-trash-o" type="button"  onclick=""></i> </span>`;
     // tslint:disable-next-line:max-line-length
-    const menuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
-                              <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
-                              <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
-                                <div id="addsibling" class="item">Add Sibling</div>
-                                <div id="addchild" class="item">Add Child</div>
-                                <div id="delete" class="item">Delete</div>
-                                <div id="addresource" class="item">Add Resource</div>
-                              </span>
-                            </span>
-                            <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
+    const menuTemplate = node.data.root === true ? rootMenuTemplate : folderMenuTemplate;
     const iconsButton = $(menuTemplate);
     let contextMenu = $($nodeSpan[0]).find(`#contextMenu`);
 
@@ -281,31 +268,33 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   }
 
   dropNode(node, data) {
-    let objectType;
-    if (data.otherNode.getLevel() === node.getLevel()) {
-      objectType = node.getParent().data.objectType;
-    } else if ((this.maxTreeDepth(data.otherNode) + node.getLevel()) > _.get(this.config, 'editorConfig.rules.levels')) {
+    // let objectType;
+    // if (data.otherNode.getLevel() === node.getLevel()) {
+    //   objectType = node.getParent().data.objectType;
+    // } else
+    if ((this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'editorConfig.maxDepth')) {
       return this.dropNotAllowed();
-    } else if (data.hitMode === 'before' || data.hitMode === 'after') {
-      objectType = node.getParent().data.objectType;
-    } else {
-      objectType = node.data.objectType;
     }
+    // else if (data.hitMode === 'before' || data.hitMode === 'after') {
+    //   objectType = node.getParent().data.objectType;
+    // } else {
+    //   objectType = node.data.objectType;
+    // }
 
-    const dropAllowed = _.includes(this.getObjectType(objectType).childrenTypes, data.otherNode.data.objectType);
-    if (dropAllowed) {
-      data.otherNode.moveTo(node, data.hitMode);
-      return true;
-    } else {
-      return false;
-    }
+    // const dropAllowed = _.includes(this.getObjectType(objectType).childrenTypes, data.otherNode.data.objectType);
+    // if (dropAllowed) {
+    data.otherNode.moveTo(node, data.hitMode);
+    return true;
+    // } else {
+    //   return false;
+    // }
   }
 
     dragDrop(node, data) {
       if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
         return this.dropNotAllowed();
       }
-      if (_.get(this.config, 'editorConfig.rules.levels')) {
+      if (_.get(this.config, 'editorConfig.maxDepth')) {
         return this.dropNode(node, data);
       }
     }
