@@ -1,6 +1,6 @@
 {
-  "name": "course-editor-library",
-  "version": "0.0.1",
+  "name": "v-sb-course-editor-library",
+  "version": "0.0.1-beta.2",
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0"

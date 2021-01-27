@@ -218,10 +218,8 @@
 <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary mx-15">
   <i class="icon plus"></i> Add from library
 </button> -->
-<ng-container *ngIf="formDataConfig">
-  <sb-dynamic-form [config]="formDataConfig" (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
-
-
+<ng-container *ngIf="formFieldProperties">
+  <sb-dynamic-form [config]="formFieldProperties" (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
 </ng-container>
 
 <!-- </ng-container> -->

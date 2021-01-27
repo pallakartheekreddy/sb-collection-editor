@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { TreeService, DataService } from '../../services';
+import { TreeService, DataService, PublicDataService } from '../../services';
 import { IeventData } from '../../interfaces';
 
 import * as _ from 'lodash-es';
@@ -22,7 +22,7 @@ export class EditorService {
   public readonly resourceAddition$: Observable<any> = this._resourceAddition$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
-  constructor(public treeService: TreeService, private dataService: DataService) { }
+  constructor(public treeService: TreeService, private dataService: DataService, private publicDataService: PublicDataService) { }
 
   emitSelectedNodeMetaData(data: IeventData) {
     this._formData$.next(data);
@@ -38,7 +38,7 @@ export class EditorService {
       url: hierarchyUrl,
       param: { mode: 'edit' }
     };
-    return this.dataService.get(req);
+    return this.publicDataService.get(req);
   }
 
   updateHierarchy(): Observable<any> {

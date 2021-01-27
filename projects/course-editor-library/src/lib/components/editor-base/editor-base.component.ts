@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { TreeService, EditorService } from '../../services';
+import { Component, Input, OnInit } from '@angular/core';
+import { TreeService, EditorService, FrameworkService, HelperService} from '../../services';
+import { EditorConfig } from '../../course-editor-library.interface';
 import { toolbarConfig, collectionTreeNodes } from '../../editor.config';
 import { ActivatedRoute } from '@angular/router';
 import { concatMap, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -17,7 +18,7 @@ interface IeditorParams {
   styleUrls: ['./editor-base.component.scss']
 })
 export class EditorBaseComponent implements OnInit {
-
+  @Input() editorConfig: EditorConfig | undefined;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public prevSelectedNodeData: any = {};
@@ -26,7 +27,9 @@ export class EditorBaseComponent implements OnInit {
   public showResourceModal = false;
   private editorParams: IeditorParams;
 
-  constructor(public treeService: TreeService, private editorService: EditorService, private activatedRoute: ActivatedRoute) {
+  constructor(public treeService: TreeService, private editorService: EditorService,
+              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+              private helperService: HelperService) {
     this.editorParams = {
       collectionId: _.get(this.activatedRoute, 'snapshot.params.collectionId'),
       type: _.get(this.activatedRoute, 'snapshot.params.type')
@@ -34,7 +37,20 @@ export class EditorBaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fetchCollectionHierarchy().subscribe();
+    this.fetchCollectionHierarchy().subscribe(
+      (response) => {
+        const collection = _.get(response, 'result.content');
+        const organisationFramework = _.get(collection, 'framework');
+        const targetFramework = _.get(collection, 'targetFWIds');
+        if (organisationFramework) {
+          this.frameworkService.initialize(organisationFramework);
+        }
+        if (!_.isEmpty(targetFramework)) {
+          this.frameworkService.getTargetFrameworkCategories(targetFramework);
+        }
+      }
+    );
+    this.helperService.initialize();
   }
 
   fetchCollectionHierarchy(): Observable<any> {

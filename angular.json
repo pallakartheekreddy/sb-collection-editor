@@ -197,6 +197,11 @@
           "options": {
             "tsConfig": "projects/course-editor-library/tsconfig.lib.json",
             "project": "projects/course-editor-library/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/course-editor-library/ng-package.prod.json"
+            }
           }
         },
         "test": {

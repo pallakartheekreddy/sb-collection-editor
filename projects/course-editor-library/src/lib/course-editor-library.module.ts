@@ -15,6 +15,6 @@ import { CollectionTreeComponent, ContentplayerPageComponent, EditorBaseComponen
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent],
   imports: [CommonModule, FormsModule, RouterModule.forRoot([]), CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule],
-  exports: [CourseEditorLibraryComponent]
+  exports: [CourseEditorLibraryComponent, EditorBaseComponent]
 })
 export class CourseEditorLibraryModule { }
