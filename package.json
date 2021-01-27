@@ -1,5 +1,5 @@
 {
-  "name": "sunbird-questionset-editor",
+  "name": "sunbird-collection-editor",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,8 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build-library": "ng build question-editor-library && node scripts/copyAssets.js"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -44,8 +43,11 @@
     "rxjs": "~6.3.3",
     "svg2img": "^0.6.1",
     "tslib": "^1.9.0",
-    "v-dynamic-forms": "0.0.1-beta.24",
-    "zone.js": "~0.8.26"
+    "v-dynamic-forms": "0.0.1-beta.32",
+    "zone.js": "~0.8.26",
+    "font-awesome": "^4.7.0",
+    "@project-sunbird/telemetry-sdk": "0.0.26",
+    "@project-sunbird/client-services": "^3.4.9"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

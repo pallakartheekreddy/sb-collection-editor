@@ -15,11 +15,43 @@ app.get("/latex/convert", latexService.convert)
 app.post("/latex/convert", bodyParser.json({ limit: '1mb' }), latexService.convert);
 
 
-app.use('/api', proxy('dock.sunbirded.org', {
+app.all(['/api/framework/v1/read/*', '/learner/framework/v1/read/*'], proxy('dev.sunbirded.org', {
     https: true,
     proxyReqPathResolver: function(req) {
-        console.log('proxyReqPathResolver ',  urlHelper.parse(req.url.replace('api', 'action')).path);
-        return urlHelper.parse(req.url.replace('api', 'action')).path;
+        console.log('proxyReqPathResolver ',  urlHelper.parse(req.url).path);
+        return urlHelper.parse(req.url).path;
+    },
+    proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
+        console.log('proxyReqOptDecorator')
+        // you can update headers
+        proxyReqOpts.headers['Content-Type'] = 'application/json';
+        proxyReqOpts.headers['user-id'] = 'content-editor';
+        proxyReqOpts.headers['authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzZGNjMzY3OWIwYTE0NmU2YWYyZjlmZDA5NWU5NTlkNCJ9.0NZhX5sqUNy-GZUya90aQFkr5ZNiqfOuELYz_IvoyS8';
+        return proxyReqOpts;
+    }
+}));
+
+
+app.use(['/api','/assets','/action'], proxy('dock.sunbirded.org', {
+    https: true,
+    proxyReqPathResolver: function(req) {
+        console.log('proxyReqPathResolver ',  urlHelper.parse(req.url).path);
+        return urlHelper.parse(req.url).path;
+    },
+    proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
+        console.log('proxyReqOptDecorator')
+        // you can update headers
+        proxyReqOpts.headers['Content-Type'] = 'application/json';
+        proxyReqOpts.headers['user-id'] = 'content-editor';
+        proxyReqOpts.headers['authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiZDExNjYzN2Y5YjU0MWJiYjU3NDY3MTA2Yjk1YzllYSJ9.Bb8ThNzcBvhouPdtRa_UXnZgi3m2zZN5Skhke1_YlM0';
+        return proxyReqOpts;
+    }
+}));
+
+app.use('/content/preview/*', proxy('https://dock.sunbirded.org', {
+    https: true,
+    proxyReqPathResolver: function(req) {
+        return require('url').parse('https://dock.sunbirded.org' + req.originalUrl).path
     },
     proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
         console.log('proxyReqOptDecorator')
@@ -31,7 +63,5 @@ app.use('/api', proxy('dock.sunbirded.org', {
         return proxyReqOpts;
     }
 }));
-
-
 
 http.createServer(app).listen(app.get('port'), 3000);

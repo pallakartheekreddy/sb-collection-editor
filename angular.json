@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "sunbird-questionset-editor": {
+    "sunbird-collection-editor": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/sunbird-questionset-editor",
+            "outputPath": "dist/sunbird-collection-editor",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -30,7 +30,8 @@
             "styles": [
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
-              "src/assets/styles/styles.scss"
+              "src/assets/styles/styles.scss",
+              "node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -38,7 +39,9 @@
               "src/assets/lib/dimmer.min.js",
               "src/assets/lib/transition.min.js",
               "src/assets/lib/modal.min.js",
-              "src/assets/lib/semantic-ui-tree-picker.js"
+              "src/assets/lib/semantic-ui-tree-picker.js",
+              "node_modules/@project-sunbird/telemetry-sdk/index.js",
+              "node_modules/@project-sunbird/client-services/index.js"
             ],
             "es5BrowserSupport": true
           },
@@ -72,19 +75,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sunbird-questionset-editor:build",
+            "browserTarget": "sunbird-collection-editor:build",
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sunbird-questionset-editor:build:production"
+              "browserTarget": "sunbird-collection-editor:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sunbird-questionset-editor:build"
+            "browserTarget": "sunbird-collection-editor:build"
           }
         },
         "test": {
@@ -118,7 +121,7 @@
         }
       }
     },
-    "sunbird-questionset-editor-e2e": {
+    "sunbird-collection-editor-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -127,11 +130,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "sunbird-questionset-editor:serve"
+            "devServerTarget": "sunbird-collection-editor:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "sunbird-questionset-editor:serve:production"
+              "devServerTarget": "sunbird-collection-editor:serve:production"
             }
           }
         },
@@ -146,73 +149,38 @@
         }
       }
     },
-    "question-editor-library": {
-      "root": "projects/question-editor-library",
-      "sourceRoot": "projects/question-editor-library/src",
+    "collection-editor-library": {
+      "root": "projects/collection-editor-library",
+      "sourceRoot": "projects/collection-editor-library/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/question-editor-library/tsconfig.lib.json",
-            "project": "projects/question-editor-library/ng-package.json"
+            "tsConfig": "projects/collection-editor-library/tsconfig.lib.json",
+            "project": "projects/collection-editor-library/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "projects/question-editor-library/ng-package.prod.json"
+              "project": "projects/course-editor-library/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/question-editor-library/src/test.ts",
-            "tsConfig": "projects/question-editor-library/tsconfig.spec.json",
-            "karmaConfig": "projects/question-editor-library/karma.conf.js"
+            "main": "projects/collection-editor-library/src/test.ts",
+            "tsConfig": "projects/collection-editor-library/tsconfig.spec.json",
+            "karmaConfig": "projects/collection-editor-library/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/question-editor-library/tsconfig.lib.json",
-              "projects/question-editor-library/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "course-editor-library": {
-      "root": "projects/course-editor-library",
-      "sourceRoot": "projects/course-editor-library/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/course-editor-library/tsconfig.lib.json",
-            "project": "projects/course-editor-library/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/course-editor-library/src/test.ts",
-            "tsConfig": "projects/course-editor-library/tsconfig.spec.json",
-            "karmaConfig": "projects/course-editor-library/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/course-editor-library/tsconfig.lib.json",
-              "projects/course-editor-library/tsconfig.spec.json"
+              "projects/collection-editor-library/tsconfig.lib.json",
+              "projects/collection-editor-library/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -222,5 +190,5 @@
       }
     }
   },
-  "defaultProject": "sunbird-questionset-editor"
+  "defaultProject": "sunbird-collection-editor"
 }

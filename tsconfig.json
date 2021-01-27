@@ -19,17 +19,11 @@
       "dom"
     ],
     "paths": {
-      "question-editor-library": [
-        "dist/question-editor-library"
+      "collection-editor-library": [
+        "dist/collection-editor-library"
       ],
-      "question-editor-library/*": [
-        "dist/question-editor-library/*"
-      ],
-      "course-editor-library": [
-        "dist/course-editor-library"
-      ],
-      "course-editor-library/*": [
-        "dist/course-editor-library/*"
+      "collection-editor-library/*": [
+        "dist/collection-editor-library/*"
       ]
     }
   }

@@ -16,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'sunbird-questionset-editor'`, () => {
+  it(`should have as title 'sunbird-collection-editor'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('sunbird-questionset-editor');
+    expect(app.title).toEqual('sunbird-collection-editor');
   });
 
   it('should render title in a h1 tag', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to sunbird-questionset-editor!');
+    expect(compiled.querySelector('h1').textContent).toContain('Welcome to sunbird-collection-editor!');
   });
 });
