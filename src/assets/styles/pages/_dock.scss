@@ -983,12 +983,19 @@ $progressCircle: xs calculateRem(16px) 4px 10px, sm calculateRem(24px) 6px 10px,
 }
 // SB-collection-editor
 lib-contentplayer-page{
+  display: block;
   .contentViewerIframeShadow{
     width: 100%;
-    height: 100% !important;
+    height: 380px !important;
   }
 }
 
 #fancytree-drop-marker{
   display: none !important;
+}
+
+.text-font{
+  label,.fs-0-92{
+    font-size: 0.8rem !important;
+  }
 }
