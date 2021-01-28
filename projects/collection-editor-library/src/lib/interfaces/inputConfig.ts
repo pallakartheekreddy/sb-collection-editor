@@ -8,6 +8,8 @@ export interface Context {
     uid: string;
     channel: string;
     pdata: Pdata;
+    primaryCategory: string;
+    objectType: string;
     contextRollup: ContextRollup;
     tags: string[];
     cdata?: Cdata[];
@@ -22,6 +24,7 @@ export interface Context {
     env: string;
     defaultLicense: any;
     framework: string;
+    targetFWIds: string[];
     aws_s3_urls: string[];
 }
 export interface User {

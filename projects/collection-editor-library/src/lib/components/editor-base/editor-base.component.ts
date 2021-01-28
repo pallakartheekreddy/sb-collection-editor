@@ -28,6 +28,8 @@ export class EditorBaseComponent implements OnInit {
   private editorParams: IeditorParams;
   public telemetryPageId = 'collection-editor';
   public pageStartTime;
+  public rootFormConfig: any;
+  public unitFormConfig: any;
 
   constructor(public treeService: TreeService, private editorService: EditorService, private activatedRoute: ActivatedRoute,
               private frameworkService: FrameworkService, private helperService: HelperService,
@@ -51,7 +53,17 @@ export class EditorBaseComponent implements OnInit {
         }
         this.helperService.initialize(this.editorInputData, _.get(collection, 'originData.channel'));
       });
-    console.log(this.editorInputData, '----->editorInput');
+    this.editorService.getCategoryDefinition(this.editorInputData.context.primaryCategory,
+      this.editorInputData.context.channel, this.editorInputData.context.objectType)
+    .subscribe(
+      (response) => {
+        this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
+        this.rootFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.create.properties');
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorInputData);
     this.telemetryService.telemetryPageId = this.telemetryPageId;

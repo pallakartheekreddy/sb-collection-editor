@@ -13,7 +13,8 @@ import * as _ from 'lodash-es';
   styleUrls: ['./meta-form.component.scss']
 })
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
-
+  @Input() rootFormConfig: any;
+  @Input() unitFormConfig: any;
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
   public formOutputData: any;
@@ -77,7 +78,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     console.log(categoryMasterList);
     console.log(`VISIBILITY ${this.metaDataFields.visibility}`);
 
-    const formConfig  = (this.metaDataFields.visibility === 'Default') ? _.cloneDeep(formConfigRoot) : _.cloneDeep(formConfigFolder);
+    const formConfig  = (this.metaDataFields.visibility === 'Default') ?
+     _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     _.forEach(formConfig, (section) => {
       _.forEach(section.fields, field => {
 

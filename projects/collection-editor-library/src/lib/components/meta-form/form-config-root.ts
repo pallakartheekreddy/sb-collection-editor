@@ -82,7 +82,7 @@ export const formConfigRoot = [
           editable: true,
           index: 4,
           renderingHints: {
-  
+
           },
           inputType: 'select',
           label: 'Type',
@@ -110,7 +110,6 @@ export const formConfigRoot = [
           name: 'Additional Category',
           placeholder: 'Select Additional Category',
           renderingHints: {
-  
           },
           range: ['Classroom Teaching Video',
             'Concept Map',
@@ -332,51 +331,6 @@ export const formConfigRoot = [
             type: 'required',
             message: 'Topic is required'
           }]
-        },
-        {
-          code: 'shuffleQuestions',
-          dataType: 'text',
-          description: 'Shuffle Questions',
-          editable: true,
-          default: '',
-          index: 5,
-          inputType: 'checkbox',
-          label: 'Shuffle Questions',
-          name: 'Shuffle Questions',
-          placeholder: 'Shuffle Questions',
-          renderingHints: {},
-          required: false,
-          visible: true
-        },
-        {
-          code: 'showFeedback',
-          dataType: 'boolean',
-          description: 'Enable Feedback',
-          editable: false,
-          default: true,
-          index: 5,
-          inputType: 'checkbox',
-          label: 'Enable Feedback',
-          name: 'Enable Feedback',
-          placeholder: 'Show Feedback',
-          renderingHints: {},
-          required: false,
-          visible: true
-        },
-        {
-          code: 'showQuestions',
-          dataType: 'text',
-          description: 'Show Questions',
-          editable: true,
-          index: 5,
-          inputType: 'select',
-          label: 'Show Questions',
-          name: 'showQuestions',
-          placeholder: 'Show Questions',
-          renderingHints: {},
-          required: false,
-          visible: true,
-          range: ''
         }
       ]
     },

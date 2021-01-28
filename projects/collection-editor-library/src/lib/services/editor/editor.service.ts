@@ -100,4 +100,21 @@ export class EditorService {
 
     return instance.data;
   }
+
+  getCategoryDefinition(categoryName, channel, objectType?: any) {
+    const req = {
+      url: 'object/category/definition/v1/read?fields=objectMetadata,forms,name',
+      data: {
+        request: {
+          objectCategoryDefinition: {
+              objectType: objectType ? objectType : 'Content',
+              name: categoryName,
+              ...(channel && { channel })
+          },
+        }
+      }
+    };
+    return this.dataService.post(req);
+  }
+
 }
