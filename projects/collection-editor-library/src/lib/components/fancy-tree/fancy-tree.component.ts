@@ -350,11 +350,11 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   checkContentAddition(targetNode, contentNode): boolean {
     const nodeConfig = this.config.editorConfig.hierarchy[`level${targetNode.getLevel() - 1}`];
     const [Content, QuestionSet] = [_.get(nodeConfig, 'children.Content'), _.get(nodeConfig, 'children.QuestionSet')];
-    if (Content && Content.length && _.includes(Content, _.get(contentNode, 'data.metadata.primaryCategory'))) {
-      return true;
+    if (Content && Content.length) {
+      return _.includes(Content, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
     }
-    if (QuestionSet && QuestionSet.length && _.includes(QuestionSet, _.get(contentNode, 'data.metadata.primaryCategory'))) {
-      return true;
+    if (QuestionSet && QuestionSet.length) {
+      return _.includes(QuestionSet, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
     }
     // tslint:disable-next-line:max-line-length
     if (_.get(this.helperService.getChannelData, 'contentPrimaryCategories') && _.includes(_.get(this.helperService.getChannelData, 'contentPrimaryCategories'), _.get(contentNode, 'data.metadata.primaryCategory')) ) {
