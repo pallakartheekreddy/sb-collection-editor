@@ -15,7 +15,7 @@ app.get("/latex/convert", latexService.convert)
 app.post("/latex/convert", bodyParser.json({ limit: '1mb' }), latexService.convert);
 
 
-app.all(['/api/framework/v1/read/*', '/learner/framework/v1/read/*'], proxy('dev.sunbirded.org', {
+app.all(['/api/framework/v1/read/*', '/learner/framework/v1/read/*', '/api/channel/v1/read/*'], proxy('dev.sunbirded.org', {
     https: true,
     proxyReqPathResolver: function(req) {
         console.log('proxyReqPathResolver ',  urlHelper.parse(req.url).path);

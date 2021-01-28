@@ -84,8 +84,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         const frameworkCategory = _.find(categoryMasterList, category => {
           return category.code === field.sourceCategory && !_.includes(field.code, 'target');
         });
-
-        field.default = _.get(this.metaDataFields, field.code);
+        if (field.sourceCategory) {
+          field.default = _.get(this.metaDataFields, field.sourceCategory);
+        } else {
+          field.default = _.get(this.metaDataFields, field.code);
+        }
 
         if (!_.isEmpty(frameworkCategory)) {
           field.terms = frameworkCategory.terms;
@@ -179,8 +182,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       this.valueChange = true;
       this.formOutputData = {};
       _.forIn(eventData, (val, key) => {
-        // tslint:disable-next-line:no-string-literal
         key === 'name' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
+        key === 'name' ? this.formOutputData['name'] = val : this.formOutputData[key] = val;
       });
       this.treeService.setNodeTitle(_.get(eventData, 'name'));
     }

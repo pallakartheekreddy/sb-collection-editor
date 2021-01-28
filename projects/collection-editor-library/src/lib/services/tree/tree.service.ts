@@ -56,7 +56,7 @@ export class TreeService {
       // tslint:disable-next-line:max-line-length
       // const modificationData = { isNew: true, root: false, metadata: { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
       // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title };
+      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title, primaryCategory: 'Textbook Unit' };
       this.setTreeCache(node.id, metadata);
     } else {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);

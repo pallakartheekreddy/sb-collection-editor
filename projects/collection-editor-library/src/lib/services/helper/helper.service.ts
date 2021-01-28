@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { PublicDataService } from '../index';
+import { PublicDataService, DataService } from '../index';
 import { PLAYER_CONFIG } from '../../editor.config';
 interface PlayerConfig {
   config: any;
@@ -17,14 +17,16 @@ interface PlayerConfig {
 export class HelperService {
   private _availableLicenses: Array<any>;
   private _editorInputData: any;
-  constructor(private publicDataService: PublicDataService) { }
+  private _channelData: any;
+  constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
 
-  initialize(editorInputData?, defaultLicense?: any) {
+  initialize(editorInputData, channelId, defaultLicense?: any) {
     if (defaultLicense) {
       this._availableLicenses = defaultLicense;
     } else {
       this.getLicenses().subscribe();
     }
+    this.getChannelData(channelId).subscribe(data => this._channelData = data);
     this._editorInputData = editorInputData;
   }
 
@@ -56,6 +58,23 @@ export class HelperService {
     return this._availableLicenses;
   }
 
+  getChannelData(channelId): Observable<any> {
+    const channelData = sessionStorage.getItem(channelId);
+    if (!channelData) {
+      const channelOptions = {
+        url: 'channel/v1/read/' + channelId
+      };
+      return this.dataService.get(channelOptions).pipe(map((data: any) => data.result.channel));
+    } else {
+      return of(channelData);
+    }
+  }
+
+  get channelData() {
+    // return this._channelData;
+    // tslint:disable-next-line:max-line-length
+    return {contentPrimaryCategories: ['Course Assessment', 'eTextbook', 'Explanation Content', 'Learning Resource', 'Practice Question Set']};
+  }
   public uniqueId(length = 32) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

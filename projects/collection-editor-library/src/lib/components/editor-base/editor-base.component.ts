@@ -49,8 +49,8 @@ export class EditorBaseComponent implements OnInit {
         if (!_.isEmpty(targetFramework)) {
           this.frameworkService.getTargetFrameworkCategories(targetFramework);
         }
+        this.helperService.initialize(this.editorInputData, _.get(collection, 'originData.channel'));
       });
-    this.helperService.initialize(this.editorInputData);
     console.log(this.editorInputData, '----->editorInput');
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorInputData);

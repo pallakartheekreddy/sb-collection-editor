@@ -3,7 +3,7 @@ import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEm
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { EditorService, TreeService, EditorTelemetryService } from '../../services';
+import { EditorService, TreeService, EditorTelemetryService, HelperService } from '../../services';
 import { editorConfig } from '../../editor.config';
 import { Observable, Subject } from 'rxjs';
 declare var $: any;
@@ -38,7 +38,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public activatedRoute: ActivatedRoute, public treeService: TreeService, private editorService: EditorService,
-              public telemetryService: EditorTelemetryService) { }
+              public telemetryService: EditorTelemetryService, private helperService: HelperService) { }
   private onComponentDestroy$ = new Subject<any>();
   public showDeleteConfirmationPopUp: boolean;
 
@@ -292,6 +292,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     if ((this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'editorConfig.maxDepth')) {
       return this.dropNotAllowed();
     }
+    if (_.get(data, 'otherNode.data.objectType') === 'Content') {
+      return this.checkContentAddition(node, data.otherNode);
+    }
     // else if (data.hitMode === 'before' || data.hitMode === 'after') {
     //   objectType = node.getParent().data.objectType;
     // } else {
@@ -344,7 +347,21 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     return max;
   }
 
-
+  checkContentAddition(targetNode, contentNode): boolean {
+    const nodeConfig = this.config.editorConfig.hierarchy[`level${targetNode.getLevel() - 1}`];
+    const [Content, QuestionSet] = [_.get(nodeConfig, 'children.Content'), _.get(nodeConfig, 'children.QuestionSet')];
+    if (Content && Content.length && _.includes(Content, _.get(contentNode, 'data.metadata.primaryCategory'))) {
+      return true;
+    }
+    if (QuestionSet && QuestionSet.length && _.includes(QuestionSet, _.get(contentNode, 'data.metadata.primaryCategory'))) {
+      return true;
+    }
+    // tslint:disable-next-line:max-line-length
+    if (_.get(this.helperService.getChannelData, 'contentPrimaryCategories') && _.includes(_.get(this.helperService.getChannelData, 'contentPrimaryCategories'), _.get(contentNode, 'data.metadata.primaryCategory')) ) {
+      return true;
+    }
+    return false;
+  }
 
   removeNode() {
     this.treeService.removeNode();

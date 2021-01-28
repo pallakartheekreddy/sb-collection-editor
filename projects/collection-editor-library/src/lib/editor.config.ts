@@ -74,7 +74,18 @@ export const editorConfig = {
               "name": "Chapter",
               "type": "Unit",
               'iconClass': 'fa fa-folder-o',
-              "children": {}
+              "children": {
+                "Content": [
+                  "Explanation Content",
+                  "Learning Resource",
+                  "Teacher Resource",
+                  "Course Assessment"
+              ],
+              "QuestionSet": [
+                  "Practice Question Set"
+              ],
+              "Collection": []
+              }
           },
           "level2": {
               "name": "Sub-Chapter",
