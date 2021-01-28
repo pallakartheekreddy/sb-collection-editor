@@ -1,5 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { playerConfig } from './player.config';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import * as _ from 'lodash-es';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { IeventData } from '../../interfaces';
+import { EditorService, HelperService, TreeService } from '../../services';
 declare var $: any;
 
 @Component({
@@ -7,15 +11,36 @@ declare var $: any;
   templateUrl: './contentplayer-page.component.html',
   styleUrls: ['./contentplayer-page.component.scss']
 })
-export class ContentplayerPageComponent implements OnInit, AfterViewInit {
+export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contentIframe') contentIframe: ElementRef;
-  constructor() { }
+  public playerConfig: any;
+  private onComponentDestroy$ = new Subject<any>();
+  public content: any;
+  constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
 
   ngOnInit() {
+    // this.getContentDetails();
+    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
+      if (data.type === 'nodeSelect' && (!this.playerConfig || this.playerConfig.metadata.identifier !== data.metadata.identifier)) {
+        this.content = data.metadata;
+        this.getContentDetails();
+      }
+    });
   }
 
   ngAfterViewInit() {
-    this.loadDefaultPlayer();
+    // this.loadDefaultPlayer();
+  }
+
+  getContentDetails() {
+    this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
+      const contentDetails = {
+        contentId: this.content.identifier,
+        contentData: _.get(res, 'result.content')
+      };
+      this.playerConfig = this.helperService.getPlayerConfig(contentDetails);
+      this.loadDefaultPlayer();
+    });
   }
 
   loadDefaultPlayer() {
@@ -28,7 +53,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit {
         try {
           this.adjustPlayerHeight();
           // this.playerLoaded = true;
-          playerElement.contentWindow.initializePreview(playerConfig);
+          playerElement.contentWindow.initializePreview(this.playerConfig);
           // playerElement.addEventListener('renderer:telemetry:event', telemetryEvent => this.generateContentReadEvent(telemetryEvent));
           // window.frames['contentPlayer'].addEventListener('message', accessEvent => this.generateScoreSubmitEvent(accessEvent), false);
         } catch (err) {
@@ -51,5 +76,10 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit {
       const height = playerWidth * (9 / 16);
       $('#contentPlayer').css('height', height + 'px');
     }
+  }
+
+  ngOnDestroy() {
+    this.onComponentDestroy$.next();
+    this.onComponentDestroy$.complete();
   }
 }

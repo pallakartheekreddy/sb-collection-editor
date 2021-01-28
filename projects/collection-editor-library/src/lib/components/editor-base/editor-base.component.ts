@@ -50,12 +50,12 @@ export class EditorBaseComponent implements OnInit {
           this.frameworkService.getTargetFrameworkCategories(targetFramework);
         }
       });
-    this.helperService.initialize();
+    this.helperService.initialize(this.editorInputData);
     console.log(this.editorInputData, '----->editorInput');
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorInputData);
     this.telemetryService.telemetryPageId = this.telemetryPageId;
-    // this.helperService.initialize(_.get(this.editorConfig, 'context.defaultLicense'));
+    // this.helperService.initialize(this.editorInputData, _.get(this.editorConfig, 'context.defaultLicense'));
     // this.frameworkService.initialize(_.get(this.editorConfig, 'context.framework'));
     this.telemetryService.start({type: 'editor', pageid: this.telemetryPageId});
   }

@@ -36,7 +36,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.editorService.formData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
+    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
       console.log('incoming data --->', data);
       if (this.valueChange || data.type === 'saveContent') {
         this.prevNodeMetadata.emit({type: data.type, metadata: this.formOutputData || this.metaDataFields});

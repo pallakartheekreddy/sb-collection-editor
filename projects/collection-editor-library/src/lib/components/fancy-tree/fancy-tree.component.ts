@@ -35,7 +35,8 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   </span>
   </span>
   <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
-  public contentMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
+  // tslint:disable-next-line:max-line-length
+  public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public activatedRoute: ActivatedRoute, public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService) { }
   private onComponentDestroy$ = new Subject<any>();

@@ -13,8 +13,8 @@ export class EditorService {
   data: any;
   public questionStream$ = new Subject<any>();
   // tslint:disable-next-line:variable-name
-  private _formData$ = new BehaviorSubject<IeventData>(undefined);
-  public readonly formData$: Observable<IeventData> = this._formData$
+  private _nodeData$ = new BehaviorSubject<IeventData>(undefined);
+  public readonly nodeData$: Observable<IeventData> = this._nodeData$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
   // tslint:disable-next-line:variable-name
@@ -25,7 +25,7 @@ export class EditorService {
   constructor(public treeService: TreeService, private dataService: DataService, private publicDataService: PublicDataService) { }
 
   emitSelectedNodeMetaData(data: IeventData) {
-    this._formData$.next(data);
+    this._nodeData$.next(data);
   }
 
   emitResourceAddition(data) {
@@ -37,6 +37,13 @@ export class EditorService {
     const req = {
       url: hierarchyUrl,
       param: { mode: 'edit' }
+    };
+    return this.publicDataService.get(req);
+  }
+
+  fetchContentDetails(contentId) {
+    const req = {
+      url: 'content/v3/read/' + contentId
     };
     return this.publicDataService.get(req);
   }
@@ -53,7 +60,7 @@ export class EditorService {
         }
       }
     };
-    return this.dataService.patch(req);
+    return this.publicDataService.patch(req);
   }
 
   public getQuestionStream$() {
