@@ -289,7 +289,8 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     // if (data.otherNode.getLevel() === node.getLevel()) {
     //   objectType = node.getParent().data.objectType;
     // } else
-    if ((this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'editorConfig.maxDepth')) {
+    // tslint:disable-next-line:max-line-length
+    if (data.otherNode.data.objectType !== 'Content' && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'editorConfig.maxDepth')) {
       return this.dropNotAllowed();
     }
     if (_.get(data, 'otherNode.data.objectType') === 'Content') {

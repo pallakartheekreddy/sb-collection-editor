@@ -13,6 +13,7 @@ declare var $: any;
 })
 export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contentIframe') contentIframe: ElementRef;
+  public contentDetails: any;
   public playerConfig: any;
   private onComponentDestroy$ = new Subject<any>();
   public content: any;
@@ -34,11 +35,11 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
 
   getContentDetails() {
     this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
-      const contentDetails = {
+      this.contentDetails = {
         contentId: this.content.identifier,
         contentData: _.get(res, 'result.content')
       };
-      this.playerConfig = this.helperService.getPlayerConfig(contentDetails);
+      this.playerConfig = this.helperService.getPlayerConfig(this.contentDetails);
       this.loadDefaultPlayer();
     });
   }
