@@ -4,7 +4,6 @@ import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { EditorService, TreeService, EditorTelemetryService, HelperService } from '../../services';
-import { editorConfig } from '../../editor.config';
 import { Observable, Subject } from 'rxjs';
 declare var $: any;
 
@@ -18,7 +17,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   @Input() public nodes: any;
   @Input() public options: any;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
-  config: any = editorConfig;
+  public config: any;
   public showTree: boolean;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
@@ -43,6 +42,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   public showDeleteConfirmationPopUp: boolean;
 
   ngAfterViewInit() {
+    this.config = this.editorService.editorConfig.config;
     this.renderTree(this.getTreeConfig());
     // this.attachEventListener();
     this.resourceAddition();
@@ -92,7 +92,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
           /** This function MUST be defined to enable dragging for the tree.
            *  Return false to cancel dragging of node.
            */
-          const draggable = _.get(this.config, 'editorConfig.mode') === 'Edit' ? true : false;
+          const draggable = _.get(this.config, 'mode') === 'Edit' ? true : false;
           return draggable;
         },
         dragEnter: (node, data) => {
@@ -199,9 +199,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   addChild(resource?) {
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
-    const nodeConfig = this.config.editorConfig.hierarchy[tree.getActiveNode().getLevel()];
+    const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
-    if ((((tree.getActiveNode().getLevel() - 1) >= this.config.editorConfig.maxDepth))) {
+    if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
       return alert('Sorry, this operation is not allowed...');
     }
     if (resource) {
@@ -290,7 +290,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     //   objectType = node.getParent().data.objectType;
     // } else
     // tslint:disable-next-line:max-line-length
-    if (data.otherNode.data.objectType !== 'Content' && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'editorConfig.maxDepth')) {
+    if (data.otherNode.data.objectType !== 'Content' && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
     }
     if (_.get(data, 'otherNode.data.objectType') === 'Content' && !this.checkContentAddition(node, data.otherNode)) {
@@ -315,7 +315,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
       if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
         return this.dropNotAllowed();
       }
-      if (_.get(this.config, 'editorConfig.maxDepth')) {
+      if (_.get(this.config, 'maxDepth')) {
         return this.dropNode(node, data);
       }
     }
@@ -349,7 +349,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   }
 
   checkContentAddition(targetNode, contentNode): boolean {
-    const nodeConfig = this.config.editorConfig.hierarchy[`level${targetNode.getLevel() - 1}`];
+    const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
     const [Content, QuestionSet] = [_.get(nodeConfig, 'children.Content'), _.get(nodeConfig, 'children.QuestionSet')];
     if (Content && Content.length) {
       return _.includes(Content, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
 import { UUID } from 'angular2-uuid';
-import {editorConfig} from '../../editor.config';
+import { EditorConfig } from '../../interfaces';
 declare var $: any;
 
 import * as _ from 'lodash-es';
@@ -10,7 +10,7 @@ import * as _ from 'lodash-es';
   providedIn: 'root'
 })
 export class TreeService {
-  config: any = _.cloneDeep(editorConfig);
+  public config;
   treeCache = {
     nodesModified: {},
     nodes: []
@@ -19,6 +19,11 @@ export class TreeService {
   treeNativeElement: any;
 
   constructor() { }
+
+  // tslint:disable-next-line:no-shadowed-variable
+  public initialize(editorConfig: EditorConfig) {
+    this.config = editorConfig.config;
+  }
 
   getTreeObject() {
     return $(this.treeNativeElement).fancytree('getTree');
@@ -38,7 +43,7 @@ export class TreeService {
     const selectedNode = this.getActiveNode();
     const node: any = {};
     // tslint:disable-next-line:max-line-length
-    const nodeConfig = (createType === 'sibling') ? this.config.editorConfig.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.editorConfig.hierarchy[`level${selectedNode.getLevel()}`];
+    const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
     node.title = data.name ? (data.name) : _.get(nodeConfig, 'name');
     node.tooltip = node.tiltle;
     node.objectType = (data.visibility && data.visibility === 'Default') ? data.primaryCategory : nodeConfig.type;
@@ -177,7 +182,6 @@ export class TreeService {
   closePrevOpenedDropDown() {
     $(this.treeNativeElement).fancytree('getTree').visit((node) => {
       const nSpan = $(node.span);
-
       const dropDownElement = $(nSpan[0]).find(`#contextMenuDropDown`);
       dropDownElement.addClass('hidden');
       dropDownElement.removeClass('visible');

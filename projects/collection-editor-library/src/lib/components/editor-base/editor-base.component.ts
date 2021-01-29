@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService} from '../../services';
-import { EditorInputData } from '../../interfaces';
+import { EditorConfig } from '../../interfaces';
 import { toolbarConfig } from '../../editor.config';
 import { ActivatedRoute } from '@angular/router';
 import { concatMap, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ interface IeditorParams {
 })
 export class EditorBaseComponent implements OnInit {
 
-  @Input() editorInputData: EditorInputData | undefined;
+  @Input() editorConfig: EditorConfig | undefined;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public prevSelectedNodeData: any = {};
@@ -31,15 +31,17 @@ export class EditorBaseComponent implements OnInit {
   public rootFormConfig: any;
   public unitFormConfig: any;
 
-  constructor(public treeService: TreeService, private editorService: EditorService, private activatedRoute: ActivatedRoute,
-              private frameworkService: FrameworkService, private helperService: HelperService,
-              public telemetryService: EditorTelemetryService) {
+  constructor(public treeService: TreeService, private editorService: EditorService,
+              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+              private helperService: HelperService, public telemetryService: EditorTelemetryService) {
     this.editorParams = {
       collectionId: _.get(this.activatedRoute, 'snapshot.params.collectionId')
     };
   }
 
   ngOnInit() {
+    this.editorService.editorConfig = this.editorConfig;
+    this.treeService.initialize(this.editorConfig);
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
         const collection = _.get(response, 'result.content');
@@ -51,10 +53,10 @@ export class EditorBaseComponent implements OnInit {
         if (!_.isEmpty(targetFramework)) {
           this.frameworkService.getTargetFrameworkCategories(targetFramework);
         }
-        this.helperService.initialize(this.editorInputData, _.get(collection, 'originData.channel'));
+        this.helperService.initialize(this.editorConfig, _.get(collection, 'originData.channel'));
       });
-    this.editorService.getCategoryDefinition(this.editorInputData.context.primaryCategory,
-      this.editorInputData.context.channel, this.editorInputData.context.objectType)
+    this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
+      this.editorConfig.context.channel, this.editorConfig.config.objectType)
     .subscribe(
       (response) => {
         this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
@@ -65,9 +67,9 @@ export class EditorBaseComponent implements OnInit {
       }
     );
     this.pageStartTime = Date.now();
-    this.telemetryService.initializeTelemetry(this.editorInputData);
+    this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.telemetryPageId;
-    // this.helperService.initialize(this.editorInputData, _.get(this.editorConfig, 'context.defaultLicense'));
+    // this.helperService.initialize(this.editorConfig, _.get(this.editorConfig, 'context.defaultLicense'));
     // this.frameworkService.initialize(_.get(this.editorConfig, 'context.framework'));
     this.telemetryService.start({type: 'editor', pageid: this.telemetryPageId});
   }

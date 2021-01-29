@@ -16,22 +16,22 @@ interface PlayerConfig {
 
 export class HelperService {
   private _availableLicenses: Array<any>;
-  private _editorInputData: any;
+  private _editorConfig: any;
   private _channelData: any;
   constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
 
-  initialize(editorInputData, channelId, defaultLicense?: any) {
+  initialize(editorConfig, channelId, defaultLicense?: any) {
     if (defaultLicense) {
       this._availableLicenses = defaultLicense;
     } else {
       this.getLicenses().subscribe();
     }
     this.getChannelData(channelId).subscribe(data => this._channelData = data);
-    this._editorInputData = editorInputData;
+    this._editorConfig = editorConfig;
   }
 
-  get editorInputData() {
-    return this._editorInputData;
+  get editorConfig() {
+    return this._editorConfig;
   }
 
   getLicenses(): Observable<any> {
@@ -98,18 +98,18 @@ export class HelperService {
   getPlayerConfig(contentDetails): PlayerConfig {
     const configuration: any = _.cloneDeep(_.get(PLAYER_CONFIG, 'playerConfig'));
     configuration.context.contentId = contentDetails.contentId;
-    configuration.context.sid = this.editorInputData.context.sid;
-    configuration.context.uid = this.editorInputData.context.user.id;
+    configuration.context.sid = this.editorConfig.context.sid;
+    configuration.context.uid = this.editorConfig.context.user.id;
     configuration.context.timeDiff = -0.807;
-    configuration.context.contextRollup = this.editorInputData.context.contextRollup,
+    configuration.context.contextRollup = this.editorConfig.context.contextRollup,
     // this.getRollUpData(this.userService.userProfile.hashTagIds);
-    configuration.context.channel = this.editorInputData.context.channel;
+    configuration.context.channel = this.editorConfig.context.channel;
     // const deviceId = (<HTMLInputElement asdocument.getElementById('deviceId'));
-    configuration.context.did = this.editorInputData.context.did;
+    configuration.context.did = this.editorConfig.context.did;
     // const buildNumber = (<HTMLInputElement>document.getElementById('buildNumber'));
     // configuration.context.pdata.ver = buildNumber && buildNumber.value ?
     // buildNumber.value.slice(0, buildNumber.value.lastIndexOf('.')) : '1.0';
-    configuration.context.pdata.ver = this.editorInputData.context.pdata.ver || 1.0;
+    configuration.context.pdata.ver = this.editorConfig.context.pdata.ver || 1.0;
     if (_.isUndefined(contentDetails.courseId)) {
       configuration.context.dims = '';
       // this.userService.dims;
@@ -123,13 +123,13 @@ export class HelperService {
       configuration.context.dims = cloneDims;
     }
     const tags = [];
-    _.forEach(this.editorInputData.context.user.orgIds, (org) => {
+    _.forEach(this.editorConfig.context.user.orgIds, (org) => {
       if (org.hashTagId) {
         tags.push(org.hashTagId);
       }
     });
     configuration.context.tags = tags;
-    configuration.context.app = [this.editorInputData.context.channel];
+    configuration.context.app = [this.editorConfig.context.channel];
     if (contentDetails.courseId) {
       configuration.context.cdata = [{
         id: contentDetails.courseId,
@@ -140,7 +140,7 @@ export class HelperService {
         id: contentDetails.batchId} );
       }
     }
-    configuration.context.pdata.id = this.editorInputData.context.pdata.id;
+    configuration.context.pdata.id = this.editorConfig.context.pdata.id;
     configuration.metadata = contentDetails.contentData;
     configuration.data = contentDetails.contentData.mimeType !== PLAYER_CONFIG.MIME_TYPE.ecmlContent ?
       {} : contentDetails.contentData.body;

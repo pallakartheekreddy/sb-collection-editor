@@ -1,21 +1,18 @@
-export const editorInput = {
+export const editorConfig = {
     context: {
-      user: {
-        id: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
-        name: 'Vaibahv Bhuva',
-        orgIds: ['01307938306521497658']
-      },
       identifier: 'do_113193433773948928111',
-      mode: 'edit', // edit OR review
+      channel: '01307938306521497658',
       framework: 'tn_k-12',
       targetFWIds: ['ekstep_ncert_k-12'],
       authToken: ' ',
       sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
       did: '7e85b4967aebd6704ba1f604f20056b6',
       uid: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
-      channel: '01307938306521497658',
-      primaryCategory: 'Course',
-      objectType: 'Collection',
+      user: {
+        id: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
+        name: 'Vaibahv Bhuva',
+        orgIds: ['01307938306521497658']
+      },
       pdata: {
           id: 'dev.dock.portal',
           ver: '2.8.0',
@@ -64,12 +61,48 @@ export const editorInput = {
         }
       ],
       endpoint: '/data/v3/telemetry',
-      userData: {
-        firstName: 'Vaibhav',
-        lastName: 'Bhuva',
-      },
       env: 'question_set',
-      aws_s3_urls : ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
-      'https://dockstorage.blob.core.windows.net/sunbird-content-dock/']
+      aws_s3_urls : [
+        'https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/',
+        'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
+        'https://dockstorage.blob.core.windows.net/sunbird-content-dock/']
     },
+    config: {
+      "mode": "edit",
+      "maxDepth": 2,
+      "objectType": "Collection",
+      "primaryCategory": "Course",
+      "isRoot": true,
+      "iconClass": "fa fa-book",
+      "children": {},
+      "hierarchy": {
+          "level1": {
+              "name": "Chapter",
+              "type": "unit",
+              "mimeType": "application/vnd.ekstep.content-collection",
+              "contentType": "Textbook Unit",
+              "iconClass": "fa fa-folder-o",
+              "children": {}
+          },
+          "level2": {
+              "name": "Sub-Chapter",
+              "type": "unit",
+              "mimeType": "application/vnd.ekstep.content-collection",
+              "contentType": "Textbook Unit",
+              "iconClass": "fa fa-folder-o",
+              "children": {
+                  "Content": [
+                      "Explanation Content",
+                      "Learning Resource",
+                      "eTextbook",
+                      "Teacher Resource",
+                      "Course Assessment"
+                  ],
+                  "QuestionSet": [
+                      "Practice Question Set"
+                  ]
+              }
+          }
+      }
+  }
   };

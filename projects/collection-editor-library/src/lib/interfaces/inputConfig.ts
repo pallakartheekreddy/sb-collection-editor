@@ -57,8 +57,8 @@ export interface ObjectRollup {
     l4?: string;
 }
 
-export interface EditorInputData {
+export interface EditorConfig {
     context: Context;
-    metadata?: any;
-    data?: any;
+    config: any;
+    playerConfig?: any;
 }

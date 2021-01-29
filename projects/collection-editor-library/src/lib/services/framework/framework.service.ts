@@ -65,12 +65,9 @@ export class FrameworkService {
     return this._targetFrameworkIds;
   }
 
-
   public set targetFrameworkIds(id: any) {
     _.compact(this._targetFrameworkIds.push(id));
   }
-
-
 
   public get organisationFramework(): string {
     return this._organisationFramework;

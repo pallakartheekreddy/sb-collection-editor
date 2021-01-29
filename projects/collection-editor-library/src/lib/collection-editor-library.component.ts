@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { EditorInputData } from './interfaces';
+import { EditorConfig } from './interfaces';
 
 @Component({
   selector: 'lib-collection-editor-library',

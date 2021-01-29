@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { editorInput } from '../data';
+import { editorConfig } from '../data';
 
 @Component({
   selector: 'app-collection-editor',
@@ -7,7 +7,7 @@ import { editorInput } from '../data';
   styleUrls: ['./collection-editor.component.scss']
 })
 export class CollectionEditorComponent implements OnInit {
-  editorInputData = editorInput;
+  editorConfig = editorConfig;
   constructor() { }
 
   ngOnInit() {
