@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { PublicDataService, DataService } from '../index';
+import { PublicDataService, DataService, EditorService } from '../index';
 import { PLAYER_CONFIG } from '../../editor.config';
 interface PlayerConfig {
   config: any;
@@ -16,22 +16,16 @@ interface PlayerConfig {
 
 export class HelperService {
   private _availableLicenses: Array<any>;
-  private _editorConfig: any;
   private _channelData: any;
-  constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
+  constructor(private publicDataService: PublicDataService, private dataService: DataService, private editorService: EditorService) { }
 
-  initialize(editorConfig, channelId, defaultLicense?: any) {
+  initialize(channelId, defaultLicense?: any) {
     if (defaultLicense) {
       this._availableLicenses = defaultLicense;
     } else {
       this.getLicenses().subscribe();
     }
     this.getChannelData(channelId).subscribe(data => this._channelData = data);
-    this._editorConfig = editorConfig;
-  }
-
-  get editorConfig() {
-    return this._editorConfig;
   }
 
   getLicenses(): Observable<any> {
@@ -98,18 +92,18 @@ export class HelperService {
   getPlayerConfig(contentDetails): PlayerConfig {
     const configuration: any = _.cloneDeep(_.get(PLAYER_CONFIG, 'playerConfig'));
     configuration.context.contentId = contentDetails.contentId;
-    configuration.context.sid = this.editorConfig.context.sid;
-    configuration.context.uid = this.editorConfig.context.user.id;
-    configuration.context.timeDiff = -0.807;
-    configuration.context.contextRollup = this.editorConfig.context.contextRollup,
+    configuration.context.sid = _.get(this.editorService.editorConfig, 'context.sid');
+    configuration.context.uid = _.get(this.editorService.editorConfig, 'context.uid');
+    configuration.context.timeDiff = _.get(this.editorService.editorConfig, 'context.timeDiff');
+    configuration.context.contextRollup = _.get(this.editorService.editorConfig, 'context.contextRollup');
     // this.getRollUpData(this.userService.userProfile.hashTagIds);
-    configuration.context.channel = this.editorConfig.context.channel;
+    configuration.context.channel = _.get(this.editorService.editorConfig, 'context.channel');
     // const deviceId = (<HTMLInputElement asdocument.getElementById('deviceId'));
-    configuration.context.did = this.editorConfig.context.did;
+    configuration.context.did = _.get(this.editorService.editorConfig, 'context.did');
     // const buildNumber = (<HTMLInputElement>document.getElementById('buildNumber'));
     // configuration.context.pdata.ver = buildNumber && buildNumber.value ?
     // buildNumber.value.slice(0, buildNumber.value.lastIndexOf('.')) : '1.0';
-    configuration.context.pdata.ver = this.editorConfig.context.pdata.ver || 1.0;
+    configuration.context.pdata.ver = 1.0;
     if (_.isUndefined(contentDetails.courseId)) {
       configuration.context.dims = '';
       // this.userService.dims;
@@ -123,13 +117,13 @@ export class HelperService {
       configuration.context.dims = cloneDims;
     }
     const tags = [];
-    _.forEach(this.editorConfig.context.user.orgIds, (org) => {
+    _.forEach(_.get(this.editorService.editorConfig, 'user'), (org) => {
       if (org.hashTagId) {
         tags.push(org.hashTagId);
       }
     });
     configuration.context.tags = tags;
-    configuration.context.app = [this.editorConfig.context.channel];
+    configuration.context.app = [_.get(this.editorService.editorConfig, 'context.channel')];
     if (contentDetails.courseId) {
       configuration.context.cdata = [{
         id: contentDetails.courseId,
@@ -140,7 +134,7 @@ export class HelperService {
         id: contentDetails.batchId} );
       }
     }
-    configuration.context.pdata.id = this.editorConfig.context.pdata.id;
+    configuration.context.pdata.id = _.get(this.editorService.editorConfig, 'context.pdata.id');
     configuration.metadata = contentDetails.contentData;
     configuration.data = contentDetails.contentData.mimeType !== PLAYER_CONFIG.MIME_TYPE.ecmlContent ?
       {} : contentDetails.contentData.body;

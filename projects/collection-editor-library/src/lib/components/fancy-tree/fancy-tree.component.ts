@@ -13,7 +13,7 @@ declare var $: any;
   styleUrls: ['./fancy-tree.component.scss']
 })
 export class FancyTreeComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('fancyTree') public tree: ElementRef;
+  @ViewChild('fancyTree', {static: false}) public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
