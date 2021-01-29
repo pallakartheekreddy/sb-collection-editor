@@ -30,6 +30,7 @@ export class EditorBaseComponent implements OnInit {
   public pageStartTime;
   public rootFormConfig: any;
   public unitFormConfig: any;
+  public formFieldValues: any = {};
 
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
@@ -45,8 +46,9 @@ export class EditorBaseComponent implements OnInit {
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
         const collection = _.get(response, 'result.content');
-        const organisationFramework = _.get(collection, 'framework');
-        const targetFramework = _.get(collection, 'targetFWIds');
+        const organisationFramework = _.get(this.editorInputData, 'context.framework') || _.get(collection, 'framework');
+        const targetFramework = _.get(this.editorInputData, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
+        this.formFieldValues.additionalCategories =  _.get(this.editorInputData, 'context.additionalCategories');
         if (organisationFramework) {
           this.frameworkService.initialize(organisationFramework);
         }

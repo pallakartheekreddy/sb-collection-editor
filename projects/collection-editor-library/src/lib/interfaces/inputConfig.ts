@@ -9,6 +9,7 @@ export interface Context {
     channel: string;
     pdata: Pdata;
     primaryCategory: string;
+    additionalCategories: any;
     objectType: string;
     contextRollup: ContextRollup;
     tags: string[];

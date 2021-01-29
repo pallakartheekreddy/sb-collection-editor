@@ -349,6 +349,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   }
 
   checkContentAddition(targetNode, contentNode): boolean {
+    if (targetNode.data.objectType === 'Content') {
+      return false;
+    }
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
     const [Content, QuestionSet] = [_.get(nodeConfig, 'children.Content'), _.get(nodeConfig, 'children.QuestionSet')];
     if (Content && Content.length) {
