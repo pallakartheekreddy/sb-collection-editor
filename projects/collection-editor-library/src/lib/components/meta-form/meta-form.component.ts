@@ -3,8 +3,6 @@ import { Subject } from 'rxjs';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
 import { IeventData } from '../../interfaces';
-import { formConfigRoot } from './form-config-root';
-import { formConfigFolder } from './form-config-folder';
 import * as _ from 'lodash-es';
 
 @Component({
@@ -15,6 +13,7 @@ import * as _ from 'lodash-es';
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
+  @Input() formFieldValues: any;
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
   public formOutputData: any;
@@ -101,6 +100,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           if (licenses && licenses.length) {
             field.range = _.map(licenses, 'name');
           }
+        }
+        if(field.code === 'additionalCategories' && this.formFieldValues.additionalCategories) {
+          field.range = this.formFieldValues.additionalCategories;
         }
       });
     });

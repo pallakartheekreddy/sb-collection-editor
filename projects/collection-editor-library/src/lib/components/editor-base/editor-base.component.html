@@ -18,7 +18,7 @@
         <!-- Right Player Sections -->
         <div class="eight wide column bg-white pl-40 mb-10">
           <ng-container *ngIf="selectedNodeData?.folder === true || selectedNodeData?.data?.root === true">
-            <lib-meta-form [rootFormConfig]="rootFormConfig" [unitFormConfig]="unitFormConfig" (prevNodeMetadata)="updateNodeMetadata($event)"></lib-meta-form>
+            <lib-meta-form [rootFormConfig]="rootFormConfig" [formFieldValues]="formFieldValues" [unitFormConfig]="unitFormConfig" (prevNodeMetadata)="updateNodeMetadata($event)"></lib-meta-form>
           </ng-container>
           <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
             <lib-contentplayer-page></lib-contentplayer-page>

@@ -16,6 +16,60 @@ export const editorInput = {
       channel: '01307938306521497658',
       primaryCategory: 'Course',
       objectType: 'Collection',
+      additionalCategories: [
+        {
+          value: 'Classroom Teaching Video',
+          label: 'Classroom Teaching Video'
+        },
+        {
+          value: 'Concept Map',
+          label: 'Concept Map'
+        },
+        {
+          value: 'Curiosity Question Set',
+          label: 'Curiosity Question Set'
+        },
+        {
+          value: 'Textbook',
+          label: 'Textbook'
+        },
+        {
+          value: 'Experiential Resource',
+          label: 'Experiential Resource'
+        },
+        {
+          value: 'Explanation Video',
+          label: 'Explanation Video'
+        },
+        {
+          value: 'Focus Spot',
+          label: 'Focus Spot'
+        },
+        {
+          value: 'Learning Outcome Definition',
+          label: 'Learning Outcome Definition'
+        },
+        {
+          value: 'Marking Scheme Rubric',
+          label: 'Marking Scheme Rubric'
+        },
+        {
+          value: 'Pedagogy Flow',
+          label: 'Pedagogy Flow'
+        },
+        {
+          value: 'Lesson Plan',
+          label: 'Lesson Plan'
+        },
+        {
+          value: 'Previous Board Exam Papers',
+          label: 'Previous Board Exam Papers'
+        },
+        {
+          value: 'TV Lesson',
+          label: 'TV Lesson'
+        }
+      ],
       pdata: {
           id: 'dev.dock.portal',
           ver: '2.8.0',
