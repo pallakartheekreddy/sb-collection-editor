@@ -987,6 +987,7 @@ lib-contentplayer-page{
   .contentViewerIframeShadow{
     width: 100%;
     height: 380px !important;
+    top: 0 !important;
   }
 }
 
@@ -997,5 +998,18 @@ lib-contentplayer-page{
 .text-font{
   label,.fs-0-92{
     font-size: 0.8rem !important;
+  }
+}
+sunbird-pdf-player{
+  display: block;
+  height: 410px;
+}
+.video-js{
+  width: 100% !important;
+  height: 100% !important;
+  padding-top: 0 !important;
+  .vjs-tech{
+    width: 100%;
+    height: 100%;
   }
 }
