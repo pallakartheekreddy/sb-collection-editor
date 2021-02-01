@@ -27,7 +27,7 @@ export const toolbarConfig = {
 export const PLAYER_CONFIG = {
   "playerConfig": {
     "context": {
-      "mode": "edit",
+      "mode": "play",
       "partner": [],
       "pdata": {
         "id": "sunbird.portal",
@@ -55,6 +55,11 @@ export const PLAYER_CONFIG = {
         "icon": "",
         "bgImage": "assets/icons/splacebackground_1.png",
         "webLink": ""
+      },
+      "sideMenu": {
+        showDownload: true,
+        showExit: false,
+        showShare: true
       },
       "apislug": "/action",
       "repos": [
@@ -100,6 +105,10 @@ export const PLAYER_CONFIG = {
     "h5p": "application/vnd.ekstep.h5p-archive",
     "webm": "video/webm",
     "xUrl": "text/x-url"
+  },
+  "playerType": {
+    'pdf-player': ['application/pdf'],
+    'video-player': ['video/mp4', 'video/webm']
   },
   "baseURL": "/content/preview/preview.html?webview=true",
   "localBaseUrl": "/contentPlayer/preview/preview.html?",

@@ -9,12 +9,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { CollectionEditorLibraryComponent } from './collection-editor-library.component';
 import { CollectionTreeComponent, ContentplayerPageComponent, EditorBaseComponent, EditorHeaderComponent,
   FancyTreeComponent, MetaFormComponent } from './components';
+import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v8';
+import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v8';
 
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, CollectionTreeComponent, ContentplayerPageComponent, EditorBaseComponent,
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent],
   imports: [CommonModule, FormsModule, RouterModule.forRoot([]), CommonFormElementsModule, InfiniteScrollModule,
-  HttpClientModule, SuiModule],
+  HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule],
   exports: [CollectionEditorLibraryComponent, EditorBaseComponent]
 })
 export class CollectionEditorLibraryModule { }

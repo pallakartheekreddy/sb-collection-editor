@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash-es';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { IeventData } from '../../interfaces';
 import { EditorService, HelperService, TreeService } from '../../services';
+import { PLAYER_CONFIG } from '../../editor.config';
 declare var $: any;
 
 @Component({
@@ -17,6 +18,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
   public playerConfig: any;
   private onComponentDestroy$ = new Subject<any>();
   public content: any;
+  public playerType: string;
   constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
 
   ngOnInit() {
@@ -40,7 +42,20 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
         contentData: _.get(res, 'result.content')
       };
       this.playerConfig = this.helperService.getPlayerConfig(this.contentDetails);
-      this.loadDefaultPlayer();
+      this.setPlayerType();
+      this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
+    });
+  }
+
+  setPlayerType() {
+    this.playerType = 'default-player';
+    const playerType = _.get(PLAYER_CONFIG, 'playerType');
+    _.forIn(playerType, (value, key) => {
+      if (value.length) {
+        if (_.includes(value, _.get(this.contentDetails, 'contentData.mimeType'))) {
+          this.playerType = key;
+        }
+      }
     });
   }
 
@@ -77,6 +92,14 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
       const height = playerWidth * (9 / 16);
       $('#contentPlayer').css('height', height + 'px');
     }
+  }
+
+  eventHandler(e) {
+
+  }
+
+  generateContentReadEvent(e, boo) {
+
   }
 
   ngOnDestroy() {

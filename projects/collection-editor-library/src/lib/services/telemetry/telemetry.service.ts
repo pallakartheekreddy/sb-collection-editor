@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
-import { EditorConfig, Context } from '../../interfaces';
+import { IEditorConfig, Context } from '../../interfaces';
 import { HelperService } from '../index';
 import * as _ from 'lodash-es';
 @Injectable({
@@ -24,7 +24,7 @@ export class EditorTelemetryService {
 
   constructor( public helperService: HelperService ) {}
 
-  initializeTelemetry(config: EditorConfig) {
+  initializeTelemetry(config: IEditorConfig) {
     this.duration = new Date().getTime();
     this.context = config.context;
     this.channel = config.context.channel;
