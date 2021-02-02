@@ -18,8 +18,8 @@ export class CollectionTreeComponent implements OnInit {
                public editorService: EditorService) { }
 
   ngOnInit() {
-    this.initialize();
     this.config = this.editorService.editorConfig.config;
+    this.initialize();
   }
 
   private initialize() {

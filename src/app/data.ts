@@ -127,7 +127,7 @@ export const editorConfig = {
       hierarchy: {
           level1: {
               name: 'Chapter',
-              type: 'unit',
+              type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
               contentType: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
@@ -135,7 +135,7 @@ export const editorConfig = {
           },
           level2: {
               name: 'Sub-Chapter',
-              type: 'unit',
+              type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
               contentType: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
