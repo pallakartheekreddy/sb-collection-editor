@@ -31,6 +31,8 @@ export class EditorBaseComponent implements OnInit {
   public rootFormConfig: any;
   public unitFormConfig: any;
   public formFieldValues: any = {};
+  public showLibraryPage = false;
+  public libraryComponentInput: any;
 
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
@@ -90,9 +92,23 @@ export class EditorBaseComponent implements OnInit {
       case 'addResource':
         this.showResourceModal = true;
         break;
+        case 'addFromLibrary':
+          this.showLibraryComponentPage();
+          break;
       default:
         break;
     }
+  }
+
+  showLibraryComponentPage() {
+    this.libraryComponentInput = {
+      questionSetId: this.editorParams.collectionId
+    };
+    this.showLibraryPage = true;
+  }
+
+  libraryEventListener(event: any) {
+    this.showLibraryPage = false;
   }
 
   saveContent() {
