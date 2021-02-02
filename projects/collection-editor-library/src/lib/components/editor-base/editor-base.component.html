@@ -1,4 +1,4 @@
-<div class="add-to-library mb-30">
+<div class="add-to-library mb-30" *ngIf="!showLibraryPage">
   <lib-editor-header
     [toolbarConfig]="toolbarConfig"
     (toolbarEmitter)="toolbarEventListener($event)"
@@ -28,6 +28,11 @@
     </div>
   </div>
 </div>
+
+<ng-container *ngIf="showLibraryPage">
+  <lib-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
+  </lib-library>
+</ng-container>
 
 <!-- <sui-modal *ngIf="showResourceModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
 [size]="'fullscreen'" class="sb-modal sb-modal-fullscreen" appBodyScroll

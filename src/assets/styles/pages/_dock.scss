@@ -512,7 +512,7 @@ hr {
   }
 
   .sb-btn-cover {
-    width: 33.3%;
+    width: 66.3%;
     justify-content: flex-end;
     border: none;
   }
@@ -981,6 +981,11 @@ $progressCircle: xs calculateRem(16px) 4px 10px, sm calculateRem(24px) 6px 10px,
     background-color: transparent !important;
   }
 }
+
+sui-accordion{
+  box-shadow: none !important;
+}
+
 // SB-collection-editor
 lib-contentplayer-page{
   display: block;
