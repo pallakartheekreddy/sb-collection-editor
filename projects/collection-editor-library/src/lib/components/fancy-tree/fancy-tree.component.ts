@@ -44,7 +44,6 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.config = this.editorService.editorConfig.config;
     this.renderTree(this.getTreeConfig());
-    // this.attachEventListener();
     this.resourceAddition();
     // const rootNode = $(this.tree.nativeElement).fancytree('getRootNode');
     // const firstChild = rootNode.getFirstChild().getFirstChild(); // rootNode.getFirstChild() will always be available.
@@ -160,21 +159,14 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
 
         // check if span of node already rendered
         if (!$nodeSpan.data('rendered')) {
-            // tslint:disable-next-line:max-line-length
-            this.attachContextMenu(node);
+          this.attachContextMenu(node);
 
-            // span rendered
-            $nodeSpan.data('rendered', true);
+          // span rendered
+          $nodeSpan.data('rendered', true);
         }
       }
     };
     return options;
-  }
-
-  attachEventListener() {
-    $('#contextMenu').on('click', (event) => {
-      console.log('eventtt----->', event);
-    });
   }
 
   expandAll(flag) {
@@ -234,6 +226,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   }
 
   attachContextMenu(node, activeNode?) {
+    if (_.get(this.config, 'mode') !== 'edit') {
+      return;
+    }
     const $nodeSpan = $(node.span);
     // const deleteTemplate = `<span> <i class="fa fa-trash-o" type="button"  onclick=""></i> </span>`;
     // tslint:disable-next-line:max-line-length
