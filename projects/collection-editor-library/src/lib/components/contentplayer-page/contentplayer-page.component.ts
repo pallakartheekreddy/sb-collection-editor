@@ -36,6 +36,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
   }
 
   getContentDetails() {
+    this.playerType = 'default-player';
     this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
       this.contentDetails = {
         contentId: this.content.identifier,
@@ -48,7 +49,6 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
   }
 
   setPlayerType() {
-    this.playerType = 'default-player';
     const playerType = _.get(PLAYER_CONFIG, 'playerType');
     _.forIn(playerType, (value, key) => {
       if (value.length) {
