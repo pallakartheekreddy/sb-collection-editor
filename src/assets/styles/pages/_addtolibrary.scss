@@ -1188,8 +1188,8 @@
     .fs-0785{
       font-size: 0.785rem;
     }
-    .sb-w-70{
-      width: 70px;
+    .sb-w-75{
+      width: 75px;
     }
     .ui.toggle.checkbox label:after{
       width: 1rem;
@@ -1210,4 +1210,7 @@
   } 
   .textbookBtnLink{
     right: 0;
+  }
+  .sb-left-icon-btn.sb-btn-xs{
+    padding: 0 0.5rem !important;
   }
